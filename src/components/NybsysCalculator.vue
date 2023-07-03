@@ -22,6 +22,7 @@
                     type="number"
                     class="form-control form-control-sm"
                     id="input1"
+                    v-model="totalCoverageArea"
                   />
                 </div>
               </div>
@@ -35,9 +36,10 @@
                   <select
                     class="form-select form-select-sm"
                     aria-label=".form-select-sm example"
+                    v-model="typeOfSite"
                   >
-                    <option selected>Open this select menu</option>
-                    <option value="1">One</option>
+                    <option selected value="">Open this select menu</option>
+                    <option value="factory">Factory</option>
                     <option value="2">Two</option>
                     <option value="3">Three</option>
                   </select>
@@ -129,7 +131,12 @@
                   >
                 </div>
                 <div class="col-6 text-end">
-                  <span><b>7 radio units, 400 SIM cards</b></span>
+                  <span
+                    ><b v-if="numberOfRadio && simCard"
+                      >{{ numberOfRadio }} radio units, {{ simCard }} SIM
+                      cards</b
+                    ></span
+                  >
                 </div>
               </div>
             </div>
@@ -155,7 +162,9 @@
                   >
                 </div>
                 <div class="col-6 text-end">
-                  <span><b>10000 sq. ft</b></span>
+                  <span
+                    ><b>{{ totalCoverageArea }}</b></span
+                  >
                 </div>
               </div>
             </div>
@@ -230,8 +239,34 @@ export default {
   components: { BusinessCaseChart },
   data() {
     return {
-      propertyName: 5,
+      totalCoverageArea: 1000,
+      typeOfSite: "",
+      specificHardwareCoverageAreaPerCell: null,
+      radioPerCell: null,
+      concurrentUser: null,
     };
+  },
+  watch: {
+    typeOfSite() {
+      if (this.typeOfSite == "factory") {
+        (this.specificHardwareCoverageAreaPerCell = 200),
+          (this.radioPerCell = 3),
+          (this.concurrentUser = 100);
+      } else if (this.typeOfSite == 2) {
+        this.numberOfRadio = 7;
+      }
+    },
+  },
+  computed: {
+    numberOfRadio() {
+      return this.cellNumber * this.radioPerCell;
+    },
+    simCard() {
+      return this.numberOfRadio * this.concurrentUser;
+    },
+    cellNumber() {
+      return this.totalCoverageArea / this.specificHardwareCoverageAreaPerCell;
+    },
   },
 };
 </script>
