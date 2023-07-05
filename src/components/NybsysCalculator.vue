@@ -60,6 +60,7 @@
                     type="number"
                     class="form-control form-control-sm"
                     id="maxNumberofDevice"
+                    placeholder="eg. 100"
                     v-model="maxNumberOfUserDevices"
                   />
                 </div>
@@ -80,11 +81,11 @@
                     v-model="transmitPower"
                   >
                     <option selected value="">Select</option>
-                    <option :value="Number('24')">24</option>
-                    <option :value="Number('37')">37</option>
-                    <option :value="Number('40')">40</option>
-                    <option :value="Number('43')">43</option>
-                    <option :value="Number('46')">46</option>
+                    <option :value="Number('24')">24 (250 mW)</option>
+                    <option :value="Number('37')">37 (5 W)</option>
+                    <option :value="Number('40')">40 (10 W)</option>
+                    <option :value="Number('43')">43 (20 W)</option>
+                    <option :value="Number('46')">46 (40 W)</option>
                   </select>
                 </div>
               </div>
@@ -101,6 +102,8 @@
                     type="number"
                     class="form-control form-control-sm"
                     v-model="carrierFrequency"
+                    min="0"
+                    placeholder="eg. 758"
                   />
                 </div>
               </div>
@@ -117,6 +120,8 @@
                     type="number"
                     class="form-control form-control-sm"
                     v-model="baseStationAntennaHeight"
+                    min="15"
+                    max="100"
                   />
                 </div>
               </div>
@@ -132,6 +137,8 @@
                   <input
                     type="number"
                     class="form-control form-control-sm"
+                    min="1"
+                    max="10"
                     v-model="userTerminalHeight"
                   />
                 </div>
@@ -148,6 +155,7 @@
                   <input
                     type="number"
                     class="form-control form-control-sm"
+                    min="1"
                     v-model="bandwidth"
                   />
                 </div>
@@ -164,6 +172,7 @@
                   <input
                     type="number"
                     class="form-control form-control-sm"
+                    min="1"
                     v-model="antennaGain"
                   />
                 </div>
@@ -408,6 +417,26 @@
                         isFinite(sensitivityOfTheUserTerminal)
                       "
                       >{{ sensitivityOfTheUserTerminal }} dB</b
+                    ></span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="row pt-3" v-if="isInputAdvanceMode">
+              <div class="d-flex justify-content-between">
+                <div class="col">
+                  <label class="form-label">Resource Block</label>
+                </div>
+                <div class="col-6 text-end">
+                  <span
+                    ><b
+                      v-if="
+                        resourceBlocks !== null &&
+                        !isNaN(resourceBlocks) &&
+                        resourceBlocks !== '' &&
+                        isFinite(resourceBlocks)
+                      "
+                      >{{ resourceBlocks }}</b
                     ></span
                   >
                 </div>
