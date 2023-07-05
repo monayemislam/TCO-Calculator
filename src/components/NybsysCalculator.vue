@@ -44,8 +44,6 @@
                   >
                     <option selected value="">Open this select menu</option>
                     <option value="factory">Factory</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
                   </select>
                 </div>
               </div>
@@ -61,12 +59,13 @@
                   <input
                     type="number"
                     class="form-control form-control-sm"
-                    id="input1"
+                    id="maxNumberofDevice"
+                    v-model="maxNumberOfUserDevices"
                   />
                 </div>
               </div>
             </div>
-            <div class="row pt-3">
+            <!-- <div class="row pt-3">
               <div class="d-flex justify-content-between">
                 <div class="col">
                   <label for="input1" class="form-label"
@@ -81,11 +80,13 @@
                   />
                 </div>
               </div>
-            </div>
-            <!-- <div class="row pt-3">
+            </div> -->
+            <div class="row pt-3">
               <div class="d-flex justify-content-between">
                 <div class="col">
-                  <label class="form-label">Transmit power (dBm) *</label>
+                  <label for="input1" class="form-label"
+                    >Transmit power (dBm) *</label
+                  >
                 </div>
                 <div class="col-4">
                   <select
@@ -93,14 +94,16 @@
                     aria-label=".form-select-sm example"
                     v-model="transmitPower"
                   >
-                    <option value="" selected>Choose an option</option>
-                    <option value="43">43</option>
-                    <option value="44">44</option>
-                    <option value="45">45</option>
+                    <option selected value="">Select</option>
+                    <option :value="Number('24')">24</option>
+                    <option :value="Number('37')">37</option>
+                    <option :value="Number('40')">40</option>
+                    <option :value="Number('43')">43</option>
+                    <option :value="Number('46')">46</option>
                   </select>
                 </div>
               </div>
-            </div> -->
+            </div>
             <div class="row pt-3">
               <div class="d-flex justify-content-between">
                 <div class="col">
@@ -117,17 +120,162 @@
                 </div>
               </div>
             </div>
+            <div class="row pt-3" v-if="isInputAdvanceMode">
+              <div class="d-flex justify-content-between">
+                <div class="col">
+                  <label for="input1" class="form-label"
+                    >Base Station Antenna Height (m)*</label
+                  >
+                </div>
+                <div class="col-4">
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    v-model="baseStationAntennaHeight"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row pt-3" v-if="isInputAdvanceMode">
+              <div class="d-flex justify-content-between">
+                <div class="col">
+                  <label for="input1" class="form-label"
+                    >UE Antenna Height (m)*</label
+                  >
+                </div>
+                <div class="col-4">
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    v-model="userTerminalHeight"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row pt-3" v-if="isInputAdvanceMode">
+              <div class="d-flex justify-content-between">
+                <div class="col">
+                  <label for="input1" class="form-label"
+                    >Bandwidth (MHz) *</label
+                  >
+                </div>
+                <div class="col-4">
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    v-model="bandwidth"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row pt-3" v-if="isInputAdvanceMode">
+              <div class="d-flex justify-content-between">
+                <div class="col">
+                  <label for="input1" class="form-label"
+                    >Baseband Unit Antenna Gain-Tx(dBi) *</label
+                  >
+                </div>
+                <div class="col-4">
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    v-model="antennaGain"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row pt-3" v-if="isInputAdvanceMode">
+              <div class="d-flex justify-content-between">
+                <div class="col">
+                  <label for="input1" class="form-label"
+                    >Noise Figure (dBm)*</label
+                  >
+                </div>
+                <div class="col-4">
+                  <select
+                    class="form-select form-select-sm"
+                    aria-label=".form-select-sm example"
+                    v-model="noiseFigureUrban"
+                  >
+                    <option selected value="">Select</option>
+                    <option :value="Number('9')">Dense Urban</option>
+                    <option :value="Number('8')">Urban</option>
+                    <option :value="Number('7')">Suburban</option>
+                    <option :value="Number('6')">Rural</option>
+                    <option :value="Number('5')">LOS</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row pt-3" v-if="isInputAdvanceMode">
+              <div class="d-flex justify-content-between">
+                <div class="col">
+                  <label class="form-label">Modulation Scheme (QAM)*</label>
+                </div>
+                <div class="col-4">
+                  <select
+                    class="form-select form-select-sm"
+                    aria-label=".form-select-sm example"
+                    v-model="modulationScheme"
+                  >
+                    <option selected value="">Select</option>
+                    <option :value="Number('64')">QAM64</option>
+                    <option :value="Number('256')">QAM256</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row pt-3" v-if="isInputAdvanceMode">
+              <div class="d-flex justify-content-between">
+                <div class="col">
+                  <label class="form-label">Subcarrier Spacing (kHz)*</label>
+                </div>
+                <div class="col-4">
+                  <select
+                    class="form-select form-select-sm"
+                    aria-label=".form-select-sm example"
+                    v-model="subCarrierSpacing"
+                  >
+                    <option selected value="">Select</option>
+                    <option :value="Number('15')">15 KHz</option>
+                    <option :value="Number('30')">30 KHz</option>
+                    <option :value="Number('60')">60 KHz</option>
+                    <option :value="Number('120')">120 KHz</option>
+                    <option :value="Number('240')">240 KHz</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row pt-3" v-if="isInputAdvanceMode">
+              <div class="d-flex justify-content-between">
+                <div class="col">
+                  <label class="form-label">Antenna Type*</label>
+                </div>
+                <div class="col-4">
+                  <select
+                    class="form-select form-select-sm"
+                    aria-label=".form-select-sm example"
+                    v-model="antennaType"
+                  >
+                    <option selected value="">Select</option>
+                    <option :value="Number('1')">Omni</option>
+                    <option :value="Number('3')">Sector</option>
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="card-footer estimate-card-footer">
             <div class="d-flex justify-content-between">
               <div class="col form-check form-switch">
-                <label class="form-check-label" for="flexSwitchCheckDefault"
+                <label class="form-check-label" for="flexSwitchCheckInput"
                   >Advance Mode</label
                 >
                 <input
                   class="form-check-input"
                   type="checkbox"
-                  id="flexSwitchCheckDefault"
+                  id="flexSwitchCheckInput"
+                  @change="toggleInputAdvanceMode"
                 />
               </div>
               <div class="col-6 text-end">
@@ -156,8 +304,8 @@
                 <div class="col-6 text-end">
                   <span
                     ><b v-if="numberOfRadio && simCard"
-                      >{{ numberOfRadio }} radio units, {{ simCard }} SIM
-                      cards</b
+                      >{{ numberOfRadio }} radio units,
+                      {{ maxNumberOfUserDevices }} SIM cards</b
                     ></span
                   >
                 </div>
@@ -195,14 +343,14 @@
           <div class="card-footer estimate-card-footer">
             <div class="d-flex justify-content-between">
               <div class="col form-check form-switch">
-                <label class="form-check-label" for="flexSwitchCheckDefault"
+                <!-- <label class="form-check-label" for="flexSwitchCheckDefault"
                   >Advance Mode</label
                 >
                 <input
                   class="form-check-input"
                   type="checkbox"
                   id="flexSwitchCheckDefault"
-                />
+                /> -->
               </div>
               <div class="col-6 text-end">
                 <button class="btn btn-primary btn-sm download-btn">
@@ -265,6 +413,7 @@ export default {
       userDefinedCoverageArea: 7,
       typeOfSite: "",
       specificHardwareCoverageAreaPerCell: null,
+      maxNumberOfUserDevices: null,
       radioPerCell: null,
       concurrentUser: null,
       numberOfConcurrentNBIoTDevices: null,
@@ -286,25 +435,33 @@ export default {
       backhaulConnectivityAnnualCost: null,
       powerSupplyAnnualCost: null,
       //Link Budget Calculator
-      transmitPower: null,
+      transmitPower: "",
       bandwidth: null,
       antennaGain: null,
+      antennaType: "",
       carrierFrequency: null,
       baseStationAntennaHeight: null,
       userTerminalHeight: null,
       shannonCapacityScalingFactorAlpha: null,
       cableLoss: null,
-      noiseFigureUrban: null,
+      noiseFigureUrban: "",
       interferenceMargin: null,
       cellEdgeReliablity: null,
       wallPenetarationLoss: null,
       bodyLoss: null,
       GUT: null,
       RxAntennaGain: null,
-      modulationScheme: null,
-      subCarrierSpacing: null,
+      modulationScheme: "",
+      subCarrierSpacing: "",
       slotsPerSubframe: null,
+      //Input Advance Mode
+      isInputAdvanceMode: false,
     };
+  },
+  methods: {
+    toggleInputAdvanceMode() {
+      this.isInputAdvanceMode = !this.isInputAdvanceMode;
+    },
   },
   watch: {
     typeOfSite() {
@@ -332,19 +489,21 @@ export default {
           (this.interferenceMargin = 5),
           //Link Budget Calculator
           (this.bandwidth = 10),
-          (this.antennaGain = 18),
-          (this.baseStationAntennaHeight = 20);
-        (this.userTerminalHeight = 1),
+          (this.antennaType = 1);
+        (this.antennaGain = 18),
+          (this.baseStationAntennaHeight = 20),
+          (this.transmitPower = 43),
+          (this.userTerminalHeight = 2),
           (this.shannonCapacityScalingFactorAlpha = 0.65),
           (this.cableLoss = 2),
-          (this.noiseFigureUrban = 5),
+          (this.noiseFigureUrban = 8),
           (this.cellEdgeReliablity = 0.15),
           (this.wallPenetarationLoss = 18),
           (this.bodyLoss = 3),
           (this.GUT = 0),
           (this.RxAntennaGain = 0);
-        (this.modulationScheme = 256),
-          (this.subCarrierSpacing = 60),
+        (this.modulationScheme = 64),
+          (this.subCarrierSpacing = 30),
           (this.slotsPerSubframe = 2);
       } else if (this.typeOfSite == 2) {
         return "Nothing";
@@ -353,7 +512,7 @@ export default {
   },
   computed: {
     numberOfRadio() {
-      return this.theRequiredNumberOf5GBaseStation;
+      return this.theRequiredNumberOf5GBaseStation * this.antennaType;
     },
     simCard() {
       return this.numberOfRadio * this.concurrentUser;
