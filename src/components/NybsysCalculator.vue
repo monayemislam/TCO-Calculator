@@ -42,7 +42,7 @@
                     aria-label=".form-select-sm example"
                     v-model="typeOfSite"
                   >
-                    <option selected value="">Open this select menu</option>
+                    <option selected value="">Select</option>
                     <option value="factory">Factory</option>
                   </select>
                 </div>
@@ -65,22 +65,7 @@
                 </div>
               </div>
             </div>
-            <!-- <div class="row pt-3">
-              <div class="d-flex justify-content-between">
-                <div class="col">
-                  <label for="input1" class="form-label"
-                    >Transmit power (dBm) *</label
-                  >
-                </div>
-                <div class="col-4">
-                  <input
-                    type="number"
-                    class="form-control form-control-sm"
-                    v-model="transmitPower"
-                  />
-                </div>
-              </div>
-            </div> -->
+
             <div class="row pt-3">
               <div class="d-flex justify-content-between">
                 <div class="col">
@@ -320,7 +305,7 @@
                   >
                 </div>
                 <div class="col-6 text-end">
-                  <span><b>$00000</b></span>
+                  <span><b></b></span>
                 </div>
               </div>
             </div>
@@ -334,7 +319,116 @@
                 </div>
                 <div class="col-6 text-end">
                   <span
-                    ><b>{{ coverageArea }} sq. Km</b></span
+                    ><b
+                      v-if="
+                        coverageArea !== null &&
+                        !isNaN(coverageArea) &&
+                        coverageArea !== '' &&
+                        isFinite(coverageArea)
+                      "
+                      >{{ coverageArea }} sq. Km</b
+                    ></span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="row pt-3">
+              <div class="d-flex justify-content-between">
+                <div class="col">
+                  <label class="form-label">Base Station to UE distance</label>
+                </div>
+                <div class="col-6 text-end">
+                  <span
+                    ><b
+                      v-if="
+                        cellRadiusInMeter !== null &&
+                        !isNaN(cellRadiusInMeter) &&
+                        cellRadiusInMeter !== '' &&
+                        isFinite(cellRadiusInMeter)
+                      "
+                      >{{ (cellRadiusInMeter / 1000).toFixed(2) }} sq. Km</b
+                    ></span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="row pt-3" v-if="isInputAdvanceMode">
+              <div class="d-flex justify-content-between">
+                <div class="col">
+                  <label class="form-label">Propagation Model Pathloss</label>
+                </div>
+                <div class="col-6 text-end">
+                  <span
+                    ><b
+                      v-if="
+                        maximumAllowablePathloss !== null &&
+                        !isNaN(maximumAllowablePathloss) &&
+                        maximumAllowablePathloss !== '' &&
+                        isFinite(maximumAllowablePathloss)
+                      "
+                      >{{ maximumAllowablePathloss.toFixed(2) }} dBm</b
+                    ></span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="row pt-3" v-if="isInputAdvanceMode">
+              <div class="d-flex justify-content-between">
+                <div class="col">
+                  <label class="form-label">SNR</label>
+                </div>
+                <div class="col-6 text-end">
+                  <span
+                    ><b
+                      v-if="
+                        signalToNoiseRatio !== null &&
+                        !isNaN(signalToNoiseRatio) &&
+                        signalToNoiseRatio !== '' &&
+                        isFinite(signalToNoiseRatio)
+                      "
+                      >{{ signalToNoiseRatio }}</b
+                    ></span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="row pt-3" v-if="isInputAdvanceMode">
+              <div class="d-flex justify-content-between">
+                <div class="col">
+                  <label class="form-label">Sensitivity at UE</label>
+                </div>
+                <div class="col-6 text-end">
+                  <span
+                    ><b
+                      v-if="
+                        sensitivityOfTheUserTerminal !== null &&
+                        !isNaN(sensitivityOfTheUserTerminal) &&
+                        sensitivityOfTheUserTerminal !== '' &&
+                        isFinite(sensitivityOfTheUserTerminal)
+                      "
+                      >{{ sensitivityOfTheUserTerminal }} dB</b
+                    ></span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="row pt-3" v-if="isInputAdvanceMode">
+              <div class="d-flex justify-content-between">
+                <div class="col">
+                  <label class="form-label">5G NR DL Throughput</label>
+                </div>
+                <div class="col-6 text-end">
+                  <span
+                    ><b
+                      v-if="
+                        fiveGNRDL !== null &&
+                        !isNaN(fiveGNRDL) &&
+                        fiveGNRDL !== '' &&
+                        isFinite(fiveGNRDL)
+                      "
+                      >{{ fiveGNRDL }} Mbps</b
+                    ></span
                   >
                 </div>
               </div>
@@ -393,21 +487,21 @@
     </div>
     <!--Factory active use cases end-->
 
-    <div class="row mt-4 py-3 border mx-1">
+    <!-- <div class="row mt-4 py-3 border mx-1">
       <div class="col col-xs-12">
         <div>Factory active use cases</div>
         <BusinessCaseChart></BusinessCaseChart>
       </div>
       <div class="col col-xs-12"><BusinessCaseChart></BusinessCaseChart></div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-import BusinessCaseChart from "./BusinessCaseChart.vue";
+// import BusinessCaseChart from "./BusinessCaseChart.vue";
 export default {
   name: "NybSysCalculator",
-  components: { BusinessCaseChart },
+  // components: { BusinessCaseChart },
   data() {
     return {
       userDefinedCoverageArea: 7,
@@ -542,7 +636,7 @@ export default {
       const exponent = 1 / (0.65 * this.bandwidth);
       const power = Math.pow(2, exponent);
       const result = 10 * Math.log10(power - 1);
-      return result.toFixed(3);
+      return result.toFixed(2);
     },
     sensitivityOfTheUserTerminal() {
       const sensitivityValue =
@@ -550,7 +644,7 @@ export default {
         10 * Math.log10(10 * Math.pow(this.bandwidth, 6)) +
         this.noiseFigureUrban -
         this.signalToNoiseRatio;
-      return sensitivityValue.toFixed(3);
+      return sensitivityValue.toFixed(2);
     },
     shadowingMargin() {
       // const value =
@@ -629,7 +723,7 @@ export default {
         this.numberOfBitsPerSymbol *
         (948 / 1024) *
         12;
-      return result.toFixed(3);
+      return result.toFixed(2);
     },
     coverageArea() {
       const pi = Math.PI;
