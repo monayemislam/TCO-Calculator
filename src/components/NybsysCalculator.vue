@@ -10,24 +10,23 @@
             </div>
           </div>
           <div class="card-body">
-            <div class="row">
+            <div class="row pt-3">
               <div class="d-flex justify-content-between">
                 <div class="col">
                   <label for="input1" class="form-label"
-                    >Client Required Coverage area (sq. Km) *</label
+                    >Measurement Unit *</label
                   >
                 </div>
-                <!-- <div class="text-primary">
-                  DL: {{ theRequiredNumberOf5GBaseStation }}
-                </div> -->
-
                 <div class="col-4">
-                  <input
-                    type="number"
-                    class="form-control form-control-sm"
-                    id="input1"
-                    v-model="userDefinedCoverageArea"
-                  />
+                  <select
+                    class="form-select form-select-sm"
+                    aria-label=".form-select-sm example"
+                    v-model="measurementUnitType"
+                  >
+                    <option selected value="">Select</option>
+                    <option value="metric">Metric</option>
+                    <option value="imperial">Imperial</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -40,11 +39,11 @@
                   <select
                     class="form-select form-select-sm"
                     aria-label=".form-select-sm example"
-                    v-model="typeOfSite"
+                    v-model="typeOfSiteCategory"
                   >
                     <option selected value="">Select</option>
-                    <option value="factory">Factory</option>
-                    <option value="farm">Farm</option>
+                    <option value="indoor">Indoor</option>
+                    <option value="outdoor">Outdoor</option>
                   </select>
                 </div>
               </div>
@@ -53,7 +52,126 @@
               <div class="d-flex justify-content-between">
                 <div class="col">
                   <label for="input1" class="form-label"
-                    >Max number of user devices *</label
+                    >Please select your site *</label
+                  >
+                </div>
+                <div class="col-4">
+                  <select
+                    class="form-select form-select-sm"
+                    aria-label=".form-select-sm example"
+                    v-model="typeOfSite"
+                  >
+                    <option selected value="">Select</option>
+                    <option
+                      value="factory"
+                      v-if="typeOfSiteCategory == 'indoor'"
+                    >
+                      Factory
+                    </option>
+                    <option value="farm" v-if="typeOfSiteCategory == 'outdoor'">
+                      Farm
+                    </option>
+                    <option
+                      value="office"
+                      v-if="typeOfSiteCategory == 'indoor'"
+                    >
+                      Office
+                    </option>
+                    <option
+                      value="shipyard"
+                      v-if="typeOfSiteCategory == 'outdoor'"
+                    >
+                      Shipyard
+                    </option>
+                    <option
+                      value="campus"
+                      v-if="typeOfSiteCategory == 'outdoor'"
+                    >
+                      Campus
+                    </option>
+                    <option
+                      value="indoorfarm"
+                      v-if="typeOfSiteCategory == 'indoor'"
+                    >
+                      Indoor Farm
+                    </option>
+                    <option
+                      value="mining-area"
+                      v-if="typeOfSiteCategory == 'outdoor'"
+                    >
+                      Mining Area
+                    </option>
+                    <option
+                      value="supershop"
+                      v-if="typeOfSiteCategory == 'indoor'"
+                    >
+                      Super Shop
+                    </option>
+                    <option
+                      value="warehouse"
+                      v-if="typeOfSiteCategory == 'indoor'"
+                    >
+                      Warehouse
+                    </option>
+                    <option
+                      value="airport"
+                      v-if="typeOfSiteCategory == 'outdoor'"
+                    >
+                      Airport
+                    </option>
+                    <option
+                      value="garments"
+                      v-if="typeOfSiteCategory == 'indoor'"
+                    >
+                      Garments
+                    </option>
+                    <option
+                      value="stadium"
+                      v-if="typeOfSiteCategory == 'outdoor'"
+                    >
+                      Stadium
+                    </option>
+                    <option
+                      value="construction-site"
+                      v-if="typeOfSiteCategory == 'outdoor'"
+                    >
+                      Construction Site
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row pt-3">
+              <div class="d-flex justify-content-between">
+                <div class="col">
+                  <label for="input1" class="form-label"
+                    >Client Required Coverage area
+                    <span v-if="measurementUnitType == 'imperial'"
+                      >(sq. mi)</span
+                    >
+                    <span v-if="measurementUnitType == 'metric'">(sq. km)</span>
+                    *</label
+                  >
+                </div>
+                <!-- <div class="text-primary">
+                  DL: {{ theRequiredNumberOf5GBaseStation }}
+                </div> -->
+
+                <div class="col-4">
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    v-model="userDefinedCoverageArea"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="row pt-3">
+              <div class="d-flex justify-content-between">
+                <div class="col">
+                  <label for="input1" class="form-label"
+                    >Required number of user devices *</label
                   >
                 </div>
                 <div class="col-4">
@@ -83,9 +201,7 @@
                   >
                     <option selected value="">Select</option>
                     <option :value="Number('24')">24 (250 mW)</option>
-                    <option :value="Number('37')">37 (5 W)</option>
-                    <option :value="Number('40')">40 (10 W)</option>
-                    <option :value="Number('43')">43 (20 W)</option>
+                    <option :value="Number('30')">30 (1 W)</option>
                     <option :value="Number('46')">46 (40 W)</option>
                   </select>
                 </div>
@@ -95,7 +211,7 @@
               <div class="d-flex justify-content-between">
                 <div class="col">
                   <label for="input1" class="form-label"
-                    >Carrier frequency (MHz)*</label
+                    >Center frequency (MHz)*</label
                   >
                 </div>
                 <div class="col-4">
@@ -103,13 +219,13 @@
                     type="number"
                     class="form-control form-control-sm"
                     v-model="carrierFrequency"
-                    min="0"
-                    placeholder="eg. 758"
+                    min="3550"
+                    max="3700"
                   />
                 </div>
               </div>
             </div>
-            <div class="row pt-3" v-if="isInputAdvanceMode">
+            <!-- <div class="row pt-3">
               <div class="d-flex justify-content-between">
                 <div class="col">
                   <label for="input1" class="form-label"
@@ -126,8 +242,8 @@
                   />
                 </div>
               </div>
-            </div>
-            <div class="row pt-3" v-if="isInputAdvanceMode">
+            </div> -->
+            <!-- <div class="row pt-3">
               <div class="d-flex justify-content-between">
                 <div class="col">
                   <label for="input1" class="form-label"
@@ -144,8 +260,8 @@
                   />
                 </div>
               </div>
-            </div>
-            <div class="row pt-3" v-if="isInputAdvanceMode">
+            </div> -->
+            <div class="row pt-3">
               <div class="d-flex justify-content-between">
                 <div class="col">
                   <label for="input1" class="form-label"
@@ -162,11 +278,11 @@
                 </div>
               </div>
             </div>
-            <div class="row pt-3" v-if="isInputAdvanceMode">
+            <div class="row pt-3">
               <div class="d-flex justify-content-between">
                 <div class="col">
                   <label for="input1" class="form-label"
-                    >Baseband Unit Antenna Gain-Tx(dBi) *</label
+                    >Baseband Unit Antenna Gain(dBi) *</label
                   >
                 </div>
                 <div class="col-4">
@@ -179,7 +295,7 @@
                 </div>
               </div>
             </div>
-            <div class="row pt-3" v-if="isInputAdvanceMode">
+            <!-- <div class="row pt-3">
               <div class="d-flex justify-content-between">
                 <div class="col">
                   <label for="input1" class="form-label"
@@ -201,8 +317,8 @@
                   </select>
                 </div>
               </div>
-            </div>
-            <div class="row pt-3" v-if="isInputAdvanceMode">
+            </div> -->
+            <!-- <div class="row pt-3">
               <div class="d-flex justify-content-between">
                 <div class="col">
                   <label class="form-label">Modulation Scheme (QAM)*</label>
@@ -220,7 +336,7 @@
                 </div>
               </div>
             </div>
-            <div class="row pt-3" v-if="isInputAdvanceMode">
+            <div class="row pt-3">
               <div class="d-flex justify-content-between">
                 <div class="col">
                   <label class="form-label">Subcarrier Spacing (kHz)*</label>
@@ -241,7 +357,7 @@
                 </div>
               </div>
             </div>
-            <div class="row pt-3" v-if="isInputAdvanceMode">
+            <div class="row pt-3">
               <div class="d-flex justify-content-between">
                 <div class="col">
                   <label class="form-label">Antenna Type*</label>
@@ -258,9 +374,9 @@
                   </select>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
-          <div class="card-footer estimate-card-footer">
+          <!-- <div class="card-footer estimate-card-footer">
             <div class="d-flex justify-content-between">
               <div class="col form-check form-switch">
                 <label class="form-check-label" for="flexSwitchCheckInput"
@@ -277,15 +393,15 @@
                 <button class="btn btn-outline-primary btn-sm">Reset</button>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="col-md-6 col-12 estimate-advance-parent">
         <div class="card h-100">
           <div class="card-header card-header-custom">
-            <div class="parameter-first-heading">Estimates</div>
+            <div class="parameter-first-heading">Estimation</div>
             <div class="parameter-second-heading">
-              Based on the answers provided, we estimate the following hardware
+              Please see your results below.
             </div>
           </div>
           <div class="card-body">
@@ -293,21 +409,37 @@
               <div class="d-flex justify-content-between">
                 <div class="col">
                   <label for="input1" class="form-label"
-                    >Estimated Hardware</label
+                    >Estimated Baseband Unit</label
                   >
                 </div>
                 <div class="col-6 text-end">
                   <span
-                    ><b v-if="numberOfRadio && simCard"
-                      >{{ numberOfRadio }} radio units,
-                      {{ maxNumberOfUserDevices }} SIM cards</b
-                    ></span
+                    ><b v-if="numberOfRadio"
+                      >{{ numberOfRadio }} radio units
+                    </b></span
                   >
                 </div>
               </div>
             </div>
 
             <div class="row pt-3">
+              <div class="d-flex justify-content-between">
+                <div class="col">
+                  <label for="input1" class="form-label"
+                    >Estimated SIM Card</label
+                  >
+                </div>
+                <div class="col-6 text-end">
+                  <span
+                    ><b v-if="maxNumberOfUserDevices"
+                      >{{ maxNumberOfUserDevices }} SIM cards
+                    </b></span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="row pt-3">
               <div class="d-flex justify-content-between">
                 <div class="col">
                   <label for="input1" class="form-label"
@@ -318,7 +450,7 @@
                   <span><b></b></span>
                 </div>
               </div>
-            </div>
+            </div> -->
 
             <div class="row pt-3">
               <div class="d-flex justify-content-between">
@@ -336,7 +468,16 @@
                         coverageArea !== '' &&
                         isFinite(coverageArea)
                       "
-                      >{{ coverageArea }} sq. Km</b
+                      ><span v-if="measurementUnitType == 'metric'"
+                        >{{ coverageArea }} sq. Km</span
+                      ><span v-if="measurementUnitType == 'imperial'"
+                        >{{
+                          (
+                            coverageArea * this.kilometerToMileConverter
+                          ).toFixed(2)
+                        }}
+                        sq. mi</span
+                      ></b
                     ></span
                   >
                 </div>
@@ -357,13 +498,24 @@
                         cellRadiusInMeter !== '' &&
                         isFinite(cellRadiusInMeter)
                       "
-                      >{{ (cellRadiusInMeter / 1000).toFixed(2) }} sq. Km</b
+                    >
+                      <span v-if="measurementUnitType == 'metric'"
+                        >{{ (cellRadiusInMeter / 1000).toFixed(2) }} Km</span
+                      ><span v-if="measurementUnitType == 'imperial'"
+                        >{{
+                          (
+                            (cellRadiusInMeter / 1000) *
+                            kilometerToMileConverter
+                          ).toFixed(2)
+                        }}
+                        mi</span
+                      ></b
                     ></span
                   >
                 </div>
               </div>
             </div>
-            <div class="row pt-3" v-if="isInputAdvanceMode">
+            <!-- <div class="row pt-3">
               <div class="d-flex justify-content-between">
                 <div class="col">
                   <label class="form-label">Propagation Model Pathloss</label>
@@ -383,7 +535,7 @@
                 </div>
               </div>
             </div>
-            <div class="row pt-3" v-if="isInputAdvanceMode">
+            <div class="row pt-3">
               <div class="d-flex justify-content-between">
                 <div class="col">
                   <label class="form-label">SNR</label>
@@ -403,7 +555,7 @@
                 </div>
               </div>
             </div>
-            <div class="row pt-3" v-if="isInputAdvanceMode">
+            <div class="row pt-3">
               <div class="d-flex justify-content-between">
                 <div class="col">
                   <label class="form-label">Sensitivity at UE</label>
@@ -423,7 +575,7 @@
                 </div>
               </div>
             </div>
-            <div class="row pt-3" v-if="isInputAdvanceMode">
+            <div class="row pt-3">
               <div class="d-flex justify-content-between">
                 <div class="col">
                   <label class="form-label">Resource Block</label>
@@ -442,8 +594,8 @@
                   >
                 </div>
               </div>
-            </div>
-            <div class="row pt-3" v-if="isInputAdvanceMode">
+            </div> -->
+            <div class="row pt-3">
               <div class="d-flex justify-content-between">
                 <div class="col">
                   <label class="form-label">5G NR DL Throughput</label>
@@ -488,7 +640,8 @@
     </div>
     <!--Factory active use cases start-->
     <div class="row mt-4 py-3 border mx-1">
-      <div class="col col-xs-12">
+      <!--Factory active use cases start-->
+      <div class="col col-xs-12" v-if="typeOfSite == 'factory'">
         <div>Factory active use cases</div>
         <ul class="list-group list-group-flush use-case-list">
           <li class="list-group-item">
@@ -513,6 +666,327 @@
           </li>
         </ul>
       </div>
+      <!--Factory active use cases end-->
+      <!--poultry firm start-->
+      <div class="col col-xs-12" v-if="typeOfSite == 'indoorfarm'">
+        <div>Indoor Farm active use cases</div>
+        <ul class="list-group list-group-flush use-case-list">
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fifth-use-case"></i
+            >Temperature, Humidity, Air Quality and Harmful Gases monitoring
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 first-use-case"></i
+            >Automated Lighting
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 second-use-case"></i
+            >Automated Ventilation
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 third-use-case"></i>Video
+            Surveillance
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fourth-use-case"></i
+            >Automated Water and Feed Supply
+          </li>
+        </ul>
+      </div>
+      <!--poultry firm End-->
+      <!--beef firm start-->
+      <div class="col col-xs-12" v-if="typeOfSite == 'farm'">
+        <div>Outdoor Farm active use cases</div>
+        <ul class="list-group list-group-flush use-case-list">
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fifth-use-case"></i
+            >Temperature, Humidity, Air Quality and Harmful Gases monitoring
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 first-use-case"></i
+            >Automated Lighting
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 second-use-case"></i
+            >Automated Ventilation
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 third-use-case"></i>Video
+            Camera/Drone Surveillance
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fourth-use-case"></i>Smart
+            Tags
+          </li>
+        </ul>
+      </div>
+      <!--beef firm End-->
+      <!--Warehouse start-->
+      <div class="col col-xs-12" v-if="typeOfSite == 'warehouse'">
+        <div>Warehouse active use cases</div>
+        <ul class="list-group list-group-flush use-case-list">
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fifth-use-case"></i>Asset
+            Monitoring
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 first-use-case"></i>VIdeo
+            Monitoring
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 second-use-case"></i
+            >Automated Guided Vehicles
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 third-use-case"></i>Access
+            Control
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fourth-use-case"></i
+            >Environment Control
+          </li>
+        </ul>
+      </div>
+      <!--Warehouse End-->
+      <!--Garments start-->
+      <div class="col col-xs-12" v-if="typeOfSite == 'garments'">
+        <div>Garments active use cases</div>
+        <ul class="list-group list-group-flush use-case-list">
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fifth-use-case"></i>Asset
+            Monitoring
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 first-use-case"></i>VIdeo
+            Monitoring
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 second-use-case"></i>AI
+            Inspection
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 third-use-case"></i>Access
+            Control
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fourth-use-case"></i
+            >Environment Control
+          </li>
+        </ul>
+      </div>
+      <!--Garments End-->
+      <!--Shipyard start-->
+      <div class="col col-xs-12" v-if="typeOfSite == 'shipyard'">
+        <div>Shipyard active use cases</div>
+        <ul class="list-group list-group-flush use-case-list">
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fifth-use-case"></i
+            >Automated RTG Cranes
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 first-use-case"></i>Remote
+            control of ship-to-shore cranes
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 second-use-case"></i
+            >Automated Guided Vehicles
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 third-use-case"></i>Asset
+            Monitoring
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fourth-use-case"></i>Video
+            Surveillance
+          </li>
+        </ul>
+      </div>
+      <!--Shipyard End-->
+      <!--Mining Area start-->
+      <div class="col col-xs-12" v-if="typeOfSite == 'mining-area'">
+        <div>Mining area active use cases</div>
+        <ul class="list-group list-group-flush use-case-list">
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fifth-use-case"></i
+            >Autonomous Vehicles
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 first-use-case"></i
+            >Autonomous Cranes
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 second-use-case"></i
+            >Real-Time Environment Monitoring
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 third-use-case"></i>Remote
+            Controlled Drill Rigs
+          </li>
+        </ul>
+      </div>
+      <!--Mining Area End-->
+      <!--Airport start-->
+      <div class="col col-xs-12" v-if="typeOfSite == 'airport'">
+        <div>Airport active use cases</div>
+        <ul class="list-group list-group-flush use-case-list">
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fifth-use-case"></i>Flight
+            Schedule management
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 first-use-case"></i
+            >Environment Monitoring
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 second-use-case"></i
+            >AIrcraft Management
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 third-use-case"></i>
+            Ground Vehicle Management
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fourth-use-case"></i
+            >Automated Gates
+          </li>
+        </ul>
+      </div>
+      <!--Airport End-->
+      <!--Campus start-->
+      <div class="col col-xs-12" v-if="typeOfSite == 'campus'">
+        <div>Campus active use cases</div>
+        <ul class="list-group list-group-flush use-case-list">
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fifth-use-case"></i>Class
+            management
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 first-use-case"></i>Library
+            management
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 second-use-case"></i>Campus
+            environment monitoring
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 third-use-case"></i>
+            Access control
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fourth-use-case"></i>Video
+            Surveillance
+          </li>
+        </ul>
+      </div>
+      <!--Campus End-->
+      <!--Stadium start-->
+      <div class="col col-xs-12" v-if="typeOfSite == 'stadium'">
+        <div>Stadium active use cases</div>
+        <ul class="list-group list-group-flush use-case-list">
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fifth-use-case"></i
+            >Automated light Control
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 first-use-case"></i>Remote
+            Controlled Action Camera
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 second-use-case"></i>Drones
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 third-use-case"></i>
+            Access control
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fourth-use-case"></i>Video
+            Surveillance
+          </li>
+        </ul>
+      </div>
+      <!--Stadium End-->
+      <!--Construction  start-->
+      <div class="col col-xs-12" v-if="typeOfSite == 'construction-site'">
+        <div>Cconstruction Site active use cases</div>
+        <ul class="list-group list-group-flush use-case-list">
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fifth-use-case"></i>AR
+            Safety helmet
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 first-use-case"></i>Site
+            environment monitoring
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 second-use-case"></i>Access
+            control
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 third-use-case"></i>
+            Video Surveillance
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fourth-use-case"></i>Video
+            Worker safety suit
+          </li>
+        </ul>
+      </div>
+      <!--Construction End-->
+      <!--Office  start-->
+      <div class="col col-xs-12" v-if="typeOfSite == 'office'">
+        <div>Office active use cases</div>
+        <ul class="list-group list-group-flush use-case-list">
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fifth-use-case"></i>Access
+            Control
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 first-use-case"></i
+            >Appliance Automation
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 second-use-case"></i>Meeting
+            room reservation
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 third-use-case"></i>
+            Video Surveillance
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fourth-use-case"></i>Video
+            Worker safety suit
+          </li>
+        </ul>
+      </div>
+      <!--Office End-->
+      <!--Supershop start-->
+      <div class="col col-xs-12" v-if="typeOfSite == 'supershop'">
+        <div>Super Shop active use cases</div>
+        <ul class="list-group list-group-flush use-case-list">
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fifth-use-case"></i
+            >Inventory management
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 first-use-case"></i>Cash
+            management
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 second-use-case"></i>Smart
+            ad. management
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 third-use-case"></i>
+            Access control
+          </li>
+          <li class="list-group-item">
+            <i class="fa-solid fa-circle fa-xs pe-2 fourth-use-case"></i>Video
+            Surveillance
+          </li>
+        </ul>
+      </div>
+      <!--Construction End-->
+
       <div class="col col-xs-12">
         <img
           v-if="useCaseImageSource"
@@ -522,7 +996,6 @@
         />
       </div>
     </div>
-    <!--Factory active use cases end-->
 
     <!-- <div class="row mt-4 py-3 border mx-1">
       <div class="col col-xs-12">
@@ -548,8 +1021,10 @@ export default {
   // components: { BusinessCaseChart },
   data() {
     return {
+      measurementUnitType: "",
       userDefinedCoverageArea: 5,
       typeOfSite: "",
+      typeOfSiteCategory: "",
       specificHardwareCoverageAreaPerCell: 200,
       maxNumberOfUserDevices: null,
       radioPerCell: 3,
@@ -559,7 +1034,7 @@ export default {
       numberOfSite: 1,
       numberOfCore: 1,
       indoorArea: 0,
-      outdoorArea: this.userDefinedCoverageArea,
+      // outdoorArea: this.userDefinedCoverageArea,
       country: "USA",
       frequencyRange: null,
       privateWirelessTechnology: null,
@@ -573,11 +1048,11 @@ export default {
       backhaulConnectivityAnnualCost: null,
       powerSupplyAnnualCost: null,
       //Link Budget Calculator
-      transmitPower: 43,
+      transmitPower: 30,
       bandwidth: 10,
       antennaGain: 18,
       antennaType: 1,
-      carrierFrequency: 1800,
+      carrierFrequency: 3600,
       baseStationAntennaHeight: 20,
       userTerminalHeight: 2,
       shannonCapacityScalingFactorAlpha: null,
@@ -595,6 +1070,8 @@ export default {
       //Input Advance Mode
       isInputAdvanceMode: false,
       useCaseImageSource: null,
+      kilometerToMileConverter: 0.621371,
+      mileToKilometer: 1.609,
     };
   },
   methods: {
@@ -608,8 +1085,45 @@ export default {
         this.useCaseImageSource = require("@/assets/factory.png");
       } else if (this.typeOfSite == "farm") {
         this.useCaseImageSource = require("@/assets/farm.png");
+      } else if (this.typeOfSite == "indoorfarm") {
+        this.useCaseImageSource = require("@/assets/poultry-farm.jpg");
+      } else if (this.typeOfSite == "garments") {
+        this.useCaseImageSource = require("@/assets/Garments.jpg");
+      } else if (this.typeOfSite == "warehouse") {
+        this.useCaseImageSource = require("@/assets/Warehouse.jpg");
+      } else if (this.typeOfSite == "shipyard") {
+        this.useCaseImageSource = require("@/assets/Shipyard.jpg");
+      } else if (this.typeOfSite == "stadium") {
+        this.useCaseImageSource = require("@/assets/Stadium.jpg");
+      } else if (this.typeOfSite == "mining-area") {
+        this.useCaseImageSource = require("@/assets/Mining-area.jpg");
+      } else if (this.typeOfSite == "campus") {
+        this.useCaseImageSource = require("@/assets/Campus.jpg");
+      } else if (this.typeOfSite == "airport") {
+        this.useCaseImageSource = require("@/assets/Airport.jpg");
+      } else if (this.typeOfSite == "construction-site") {
+        this.useCaseImageSource = require("@/assets/Construction.jpg");
+      } else if (this.typeOfSite == "office") {
+        this.useCaseImageSource = require("@/assets/Office.jpg");
+      } else if (this.typeOfSite == "supershop") {
+        this.useCaseImageSource = require("@/assets/Supermarket.jpg");
       } else {
         this.useCaseImageSource = require("@/assets/factory.png");
+      }
+    },
+    measurementUnitType() {
+      if (this.measurementUnitType == "metric") {
+        this.userDefinedCoverageArea = 5;
+      } else {
+        this.userDefinedCoverageArea =
+          this.userDefinedCoverageArea * this.mileToKilometer;
+      }
+    },
+    typeOfSiteCategory() {
+      if (this.typeOfSiteCategory == "indoor") {
+        this.userDefinedCoverageArea = 1;
+      } else {
+        this.userDefinedCoverageArea = 5;
       }
     },
   },
@@ -620,11 +1134,11 @@ export default {
     simCard() {
       return this.numberOfRadio * this.concurrentUser;
     },
-    cellNumber() {
-      return (
-        this.userDefinedCoverageArea / this.specificHardwareCoverageAreaPerCell
-      );
-    },
+    // cellNumber() {
+    //   return (
+    //     this.userDefinedCoverageArea / this.specificHardwareCoverageAreaPerCell
+    //   );
+    // },
     totalArea() {
       return this.indoorArea + this.outdoorArea;
     },
