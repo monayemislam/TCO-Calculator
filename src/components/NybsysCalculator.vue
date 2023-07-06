@@ -44,6 +44,7 @@
                   >
                     <option selected value="">Select</option>
                     <option value="factory">Factory</option>
+                    <option value="farm">Farm</option>
                   </select>
                 </div>
               </div>
@@ -512,7 +513,14 @@
           </li>
         </ul>
       </div>
-      <div class="col col-xs-12"><img src="../assets/use-cases.jpg" /></div>
+      <div class="col col-xs-12">
+        <img
+          v-if="useCaseImageSource"
+          :src="useCaseImageSource"
+          style="width: 600px !important"
+          alt="Selected Image"
+        />
+      </div>
     </div>
     <!--Factory active use cases end-->
 
@@ -523,6 +531,13 @@
       </div>
       <div class="col col-xs-12"><BusinessCaseChart></BusinessCaseChart></div>
     </div> -->
+
+    <div class="row mt-4 py-3 border mx-1">
+      <img src="../assets/business-case-overview.png" width="1070px" />
+    </div>
+    <div class="row mt-4 py-3 border mx-1">
+      <img src="../assets/tco-comaprison2.png" width="1070px" />
+    </div>
   </div>
 </template>
 
@@ -533,19 +548,19 @@ export default {
   // components: { BusinessCaseChart },
   data() {
     return {
-      userDefinedCoverageArea: 7,
+      userDefinedCoverageArea: 5,
       typeOfSite: "",
-      specificHardwareCoverageAreaPerCell: null,
+      specificHardwareCoverageAreaPerCell: 200,
       maxNumberOfUserDevices: null,
-      radioPerCell: null,
-      concurrentUser: null,
-      numberOfConcurrentNBIoTDevices: null,
-      tcoPeriod: null,
-      numberOfSite: null,
-      numberOfCore: null,
-      indoorArea: null,
-      outdoorArea: null,
-      country: null,
+      radioPerCell: 3,
+      concurrentUser: 100,
+      numberOfConcurrentNBIoTDevices: 1000,
+      tcoPeriod: 36,
+      numberOfSite: 1,
+      numberOfCore: 1,
+      indoorArea: 0,
+      outdoorArea: this.userDefinedCoverageArea,
+      country: "USA",
       frequencyRange: null,
       privateWirelessTechnology: null,
       estimatedPriceOfTCO: null,
@@ -558,27 +573,28 @@ export default {
       backhaulConnectivityAnnualCost: null,
       powerSupplyAnnualCost: null,
       //Link Budget Calculator
-      transmitPower: "",
-      bandwidth: null,
-      antennaGain: null,
-      antennaType: "",
-      carrierFrequency: null,
-      baseStationAntennaHeight: null,
-      userTerminalHeight: null,
+      transmitPower: 43,
+      bandwidth: 10,
+      antennaGain: 18,
+      antennaType: 1,
+      carrierFrequency: 1800,
+      baseStationAntennaHeight: 20,
+      userTerminalHeight: 2,
       shannonCapacityScalingFactorAlpha: null,
-      cableLoss: null,
-      noiseFigureUrban: "",
-      interferenceMargin: null,
-      cellEdgeReliablity: null,
-      wallPenetarationLoss: null,
-      bodyLoss: null,
-      GUT: null,
-      RxAntennaGain: null,
-      modulationScheme: "",
-      subCarrierSpacing: "",
-      slotsPerSubframe: null,
+      cableLoss: 2,
+      noiseFigureUrban: 8,
+      interferenceMargin: 5,
+      cellEdgeReliablity: 0.15,
+      wallPenetarationLoss: 18,
+      bodyLoss: 3,
+      GUT: 0,
+      RxAntennaGain: 0,
+      modulationScheme: 64,
+      subCarrierSpacing: 30,
+      slotsPerSubframe: 2,
       //Input Advance Mode
       isInputAdvanceMode: false,
+      useCaseImageSource: null,
     };
   },
   methods: {
@@ -589,47 +605,11 @@ export default {
   watch: {
     typeOfSite() {
       if (this.typeOfSite == "factory") {
-        (this.specificHardwareCoverageAreaPerCell = 200),
-          (this.radioPerCell = 3),
-          (this.concurrentUser = 100),
-          (this.outdoorArea = this.userDefinedCoverageArea),
-          (this.indoorArea = 0),
-          (this.numberOfConcurrentNBIoTDevices = 1000),
-          (this.tcoPeriod = 36),
-          (this.numberOfSite = 1),
-          (this.numberOfCore = 1),
-          (this.estimatedPriceOfTCO = 1000),
-          (this.numberOfRANRequired = 20),
-          (this.ranUnitPrice = 10000),
-          (this.proposedCoverageArea =
-            this.specificHardwareCoverageAreaPerCell),
-          (this.country = "USA"),
-          (this.requiredNumberOfNBIoTDevice =
-            this.numberOfConcurrentNBIoTDevices),
-          (this.SiteAcquisitionAnnualCost = 1000),
-          (this.equipmentCost = 10000),
-          (this.powerSupplyAnnualCost = 500),
-          (this.interferenceMargin = 5),
-          //Link Budget Calculator
-          (this.bandwidth = 10),
-          (this.antennaType = 1);
-        (this.antennaGain = 18),
-          (this.baseStationAntennaHeight = 20),
-          (this.transmitPower = 43),
-          (this.userTerminalHeight = 2),
-          (this.shannonCapacityScalingFactorAlpha = 0.65),
-          (this.cableLoss = 2),
-          (this.noiseFigureUrban = 8),
-          (this.cellEdgeReliablity = 0.15),
-          (this.wallPenetarationLoss = 18),
-          (this.bodyLoss = 3),
-          (this.GUT = 0),
-          (this.RxAntennaGain = 0);
-        (this.modulationScheme = 64),
-          (this.subCarrierSpacing = 30),
-          (this.slotsPerSubframe = 2);
-      } else if (this.typeOfSite == 2) {
-        return "Nothing";
+        this.useCaseImageSource = require("@/assets/factory.png");
+      } else if (this.typeOfSite == "farm") {
+        this.useCaseImageSource = require("@/assets/farm.png");
+      } else {
+        this.useCaseImageSource = require("@/assets/factory.png");
       }
     },
   },
