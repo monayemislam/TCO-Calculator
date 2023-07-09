@@ -23,7 +23,7 @@
                     aria-label=".form-select-sm example"
                     v-model="measurementUnitType"
                   >
-                    <option selected value="">Select</option>
+                    <option value="">Select</option>
                     <option value="metric">Metric</option>
                     <option value="imperial">Imperial</option>
                   </select>
@@ -146,10 +146,34 @@
                 <div class="col">
                   <label for="input1" class="form-label"
                     >Client Required Coverage area
-                    <span v-if="measurementUnitType == 'imperial'"
+                    <span
+                      v-if="
+                        measurementUnitType == 'imperial' &&
+                        typeOfSiteCategory == 'outdoor'
+                      "
                       >(sq. mi)</span
                     >
-                    <span v-if="measurementUnitType == 'metric'">(sq. km)</span>
+                    <span
+                      v-if="
+                        typeOfSiteCategory == 'indoor' &&
+                        measurementUnitType == 'imperial'
+                      "
+                      >(sq. ft)</span
+                    >
+                    <span
+                      v-if="
+                        measurementUnitType == 'metric' &&
+                        typeOfSiteCategory == 'outdoor'
+                      "
+                      >(sq. km)</span
+                    >
+                    <span
+                      v-if="
+                        typeOfSiteCategory == 'indoor' &&
+                        measurementUnitType == 'metric'
+                      "
+                      >(sq. m)</span
+                    >
                     *</label
                   >
                 </div>
@@ -609,7 +633,7 @@
                         fiveGNRDL !== '' &&
                         isFinite(fiveGNRDL)
                       "
-                      >{{ fiveGNRDL }} Mbps</b
+                      >{{ fiveGNRDL * 4 }} Mbps</b
                     ></span
                   >
                 </div>
@@ -1005,6 +1029,75 @@
       <div class="col col-xs-12"><BusinessCaseChart></BusinessCaseChart></div>
     </div> -->
 
+    <div class="row mt-4 py-3 mx-1">
+      <div class="col col-xs-12 cell-comparison py-4 border">
+        <h3 class="pb-3">Cell Comparison</h3>
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <td>Cell Count</td>
+              <td>Indoor</td>
+              <td>Outdoor</td>
+            </tr>
+            <tr>
+              <td style="background-color: #6dbdbf; color: #ffffff">Wi-Fi 6</td>
+              <td>
+                <span v-if="typeOfSiteCategory == 'indoor'">{{
+                  (userDefinedCoverageArea / wifi6CoverageAre).toFixed(0)
+                }}</span>
+                <span v-if="typeOfSiteCategory == 'outdoor'">-</span>
+              </td>
+              <td>
+                <span v-if="typeOfSiteCategory == 'outdoor'">{{
+                  (userDefinedCoverageArea / wifi6CoverageAre).toFixed(0)
+                }}</span>
+                <span v-if="typeOfSiteCategory == 'indoor'">-</span>
+              </td>
+            </tr>
+            <tr>
+              <td style="background-color: #57a0e5; color: #ffffff">
+                Private wireless CBRS
+              </td>
+              <td>
+                <span v-if="typeOfSiteCategory == 'indoor'">{{
+                  numberOfRadio
+                }}</span>
+                <span v-if="typeOfSiteCategory == 'outdoor'">-</span>
+              </td>
+              <td>
+                <span v-if="typeOfSiteCategory == 'outdoor'">{{
+                  numberOfRadio
+                }}</span>
+                <span v-if="typeOfSiteCategory == 'indoor'">-</span>
+              </td>
+            </tr>
+            <tr>
+              <td style="background-color: #ed6d85; color: #ffffff">
+                Private wireless LTE
+              </td>
+              <td></td>
+              <td>
+                <span v-if="typeOfSiteCategory == 'outdoor'">
+                  <span
+                    v-if="
+                      userDefinedCoverageArea >= 7 &&
+                      userDefinedCoverageArea <= 12
+                    "
+                    >2</span
+                  >
+                  <span v-if="userDefinedCoverageArea < 7">1</span>
+                </span>
+                <span v-if="typeOfSiteCategory == 'indoor'">-</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col col-xs-12">
+        <h3>TCO Comparison</h3>
+      </div>
+    </div>
+
     <div class="row mt-4 py-3 border mx-1">
       <img src="../assets/business-case-overview.png" width="1070px" />
     </div>
@@ -1021,7 +1114,7 @@ export default {
   // components: { BusinessCaseChart },
   data() {
     return {
-      measurementUnitType: "",
+      measurementUnitType: "metric",
       userDefinedCoverageArea: 5,
       typeOfSite: "",
       typeOfSiteCategory: "",
@@ -1067,11 +1160,11 @@ export default {
       modulationScheme: 64,
       subCarrierSpacing: 30,
       slotsPerSubframe: 2,
-      //Input Advance Mode
-      isInputAdvanceMode: false,
       useCaseImageSource: null,
       kilometerToMileConverter: 0.621371,
       mileToKilometer: 1.609,
+      //cell comparison
+      wifi6CoverageAre: 0.0081, //sq.km
     };
   },
   methods: {
@@ -1316,5 +1409,9 @@ export default {
 }
 .fifth-use-case {
   color: #f7cf6b;
+}
+/*cell comparison*/
+.cell-comparison {
+  background-color: #edf2f5;
 }
 </style>
