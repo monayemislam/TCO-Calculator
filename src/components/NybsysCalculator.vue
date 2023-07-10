@@ -439,7 +439,37 @@
                 <div class="col-6 text-end">
                   <span
                     ><b v-if="numberOfRadio"
-                      >{{ numberOfRadio }} radio units
+                      ><span
+                        v-if="
+                          typeOfSiteCategory == 'indoor' &&
+                          measurementUnitType == 'metric'
+                        "
+                        >{{ Math.ceil(numberOfRadio / 1000000) }} radio
+                        units</span
+                      >
+                      <span
+                        v-if="
+                          typeOfSiteCategory == 'indoor' &&
+                          measurementUnitType == 'imperial'
+                        "
+                        >{{ Math.ceil(numberOfRadio / 10760000) }} radio
+                        units</span
+                      >
+                      <span
+                        v-if="
+                          typeOfSiteCategory == 'outdoor' &&
+                          measurementUnitType == 'imperial'
+                        "
+                        >{{ Math.ceil(numberOfRadio / 0.386102) }} radio
+                        units</span
+                      >
+                      <span
+                        v-if="
+                          typeOfSiteCategory == 'outdoor' &&
+                          measurementUnitType == 'metric'
+                        "
+                        >{{ Math.ceil(numberOfRadio) }} radio units</span
+                      >
                     </b></span
                   >
                 </div>
@@ -492,15 +522,34 @@
                         coverageArea !== '' &&
                         isFinite(coverageArea)
                       "
-                      ><span v-if="measurementUnitType == 'metric'"
-                        >{{ coverageArea }} sq. Km</span
-                      ><span v-if="measurementUnitType == 'imperial'"
-                        >{{
-                          (
-                            coverageArea * this.kilometerToMileConverter
-                          ).toFixed(2)
-                        }}
-                        sq. mi</span
+                    >
+                      <span
+                        v-if="
+                          measurementUnitType == 'metric' &&
+                          typeOfSiteCategory == 'indoor'
+                        "
+                        >{{ (coverageArea * 1000000).toFixed(0) }} sq. m</span
+                      >
+                      <span
+                        v-if="
+                          measurementUnitType == 'imperial' &&
+                          typeOfSiteCategory == 'indoor'
+                        "
+                        >{{ (coverageArea * 10760000).toFixed(0) }} sq. ft</span
+                      >
+                      <span
+                        v-if="
+                          measurementUnitType == 'imperial' &&
+                          typeOfSiteCategory == 'outdoor'
+                        "
+                        >{{ (coverageArea * 0.386102).toFixed(3) }} sq. mi</span
+                      >
+                      <span
+                        v-if="
+                          measurementUnitType == 'metric' &&
+                          typeOfSiteCategory == 'outdoor'
+                        "
+                        >{{ (coverageArea * 1).toFixed(0) }} sq. Km</span
                       ></b
                     ></span
                   >
@@ -523,14 +572,31 @@
                         isFinite(cellRadiusInMeter)
                       "
                     >
-                      <span v-if="measurementUnitType == 'metric'"
+                      <span
+                        v-if="
+                          measurementUnitType == 'metric' &&
+                          typeOfSiteCategory == 'indoor'
+                        "
+                        >{{ cellRadiusInMeter }} m</span
+                      ><span
+                        v-if="
+                          measurementUnitType == 'imperial' &&
+                          typeOfSiteCategory == 'indoor'
+                        "
+                        >{{ (cellRadiusInMeter * 3.28084).toFixed(2) }} ft</span
+                      ><span
+                        v-if="
+                          measurementUnitType == 'metric' &&
+                          typeOfSiteCategory == 'outdoor'
+                        "
                         >{{ (cellRadiusInMeter / 1000).toFixed(2) }} Km</span
-                      ><span v-if="measurementUnitType == 'imperial'"
+                      ><span
+                        v-if="
+                          measurementUnitType == 'imperial' &&
+                          typeOfSiteCategory == 'outdoor'
+                        "
                         >{{
-                          (
-                            (cellRadiusInMeter / 1000) *
-                            kilometerToMileConverter
-                          ).toFixed(2)
+                          (cellRadiusInMeter * 0.000621371).toFixed(2)
                         }}
                         mi</span
                       ></b
@@ -635,6 +701,67 @@
                       "
                       >{{ fiveGNRDL * 4 }} Mbps</b
                     ></span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="row pt-3">
+              <div class="d-flex justify-content-between">
+                <div class="col">
+                  <label class="form-label">Estimated Cost (monthly)</label>
+                </div>
+                <div class="col-6 text-end">
+                  <span
+                    ><b
+                      v-if="
+                        numberOfRadio !== null &&
+                        estimatedCost !== null &&
+                        !isNaN(numberOfRadio) &&
+                        numberOfRadio !== '' &&
+                        isFinite(numberOfRadio)
+                      "
+                    >
+                      <span
+                        v-if="
+                          typeOfSiteCategory == 'indoor' &&
+                          measurementUnitType == 'metric'
+                        "
+                        >{{
+                          "$" +
+                          Math.ceil(numberOfRadio / 1000000) * estimatedCost
+                        }}
+                      </span>
+
+                      <span
+                        v-if="
+                          typeOfSiteCategory == 'indoor' &&
+                          measurementUnitType == 'imperial'
+                        "
+                        >{{
+                          "$" +
+                          Math.ceil(numberOfRadio / 10760000) * estimatedCost
+                        }}
+                      </span>
+                      <span
+                        v-if="
+                          typeOfSiteCategory == 'outdoor' &&
+                          measurementUnitType == 'imperial'
+                        "
+                        >{{
+                          "$" +
+                          Math.ceil(numberOfRadio / 0.386102) * estimatedCost
+                        }}</span
+                      >
+                      <span
+                        v-if="
+                          typeOfSiteCategory == 'outdoor' &&
+                          measurementUnitType == 'metric'
+                        "
+                        >{{
+                          "$" + Math.ceil(numberOfRadio) * estimatedCost
+                        }}</span
+                      >
+                    </b></span
                   >
                 </div>
               </div>
@@ -1042,15 +1169,60 @@
             <tr>
               <td style="background-color: #6dbdbf; color: #ffffff">Wi-Fi 6</td>
               <td>
-                <span v-if="typeOfSiteCategory == 'indoor'">{{
-                  (userDefinedCoverageArea / wifi6CoverageAre).toFixed(0)
-                }}</span>
+                <span
+                  v-if="
+                    typeOfSiteCategory == 'indoor' &&
+                    measurementUnitType == 'metric'
+                  "
+                  >{{
+                    (
+                      userDefinedCoverageArea /
+                      1000000 /
+                      wifi6CoverageAre
+                    ).toFixed(0)
+                  }}</span
+                >
+                <span
+                  v-if="
+                    typeOfSiteCategory == 'indoor' &&
+                    measurementUnitType == 'imperial'
+                  "
+                  >{{
+                    (
+                      userDefinedCoverageArea /
+                      10760000 /
+                      wifi6CoverageAre
+                    ).toFixed(0)
+                  }}</span
+                >
                 <span v-if="typeOfSiteCategory == 'outdoor'">-</span>
               </td>
               <td>
-                <span v-if="typeOfSiteCategory == 'outdoor'">{{
-                  (userDefinedCoverageArea / wifi6CoverageAre).toFixed(0)
-                }}</span>
+                <span
+                  v-if="
+                    typeOfSiteCategory == 'outdoor' &&
+                    measurementUnitType == 'metric'
+                  "
+                  >{{
+                    (
+                      (0.5 * userDefinedCoverageArea) /
+                      wifi6CoverageAre
+                    ).toFixed(0)
+                  }}</span
+                >
+                <span
+                  v-if="
+                    typeOfSiteCategory == 'outdoor' &&
+                    measurementUnitType == 'imperial'
+                  "
+                  >{{
+                    (
+                      (0.5 * userDefinedCoverageArea) /
+                      0.386102 /
+                      wifi6CoverageAre
+                    ).toFixed(0)
+                  }}</span
+                >
                 <span v-if="typeOfSiteCategory == 'indoor'">-</span>
               </td>
             </tr>
@@ -1060,13 +1232,13 @@
               </td>
               <td>
                 <span v-if="typeOfSiteCategory == 'indoor'">{{
-                  numberOfRadio
+                  Math.ceil(numberOfRadio / 1000000)
                 }}</span>
                 <span v-if="typeOfSiteCategory == 'outdoor'">-</span>
               </td>
               <td>
                 <span v-if="typeOfSiteCategory == 'outdoor'">{{
-                  numberOfRadio
+                  Math.ceil(numberOfRadio / 0.386102)
                 }}</span>
                 <span v-if="typeOfSiteCategory == 'indoor'">-</span>
               </td>
@@ -1165,6 +1337,8 @@ export default {
       mileToKilometer: 1.609,
       //cell comparison
       wifi6CoverageAre: 0.0081, //sq.km
+      //cost
+      estimatedCost: 500,
     };
   },
   methods: {
@@ -1203,19 +1377,95 @@ export default {
       } else {
         this.useCaseImageSource = require("@/assets/factory.png");
       }
-    },
-    measurementUnitType() {
-      if (this.measurementUnitType == "metric") {
+
+      if (
+        this.typeOfSiteCategory == "indoor" &&
+        this.measurementUnitType == "metric"
+      ) {
+        this.userDefinedCoverageArea = 1000000;
+      } else if (
+        this.typeOfSiteCategory == "indoor" &&
+        this.measurementUnitType == "imperial"
+      ) {
+        this.userDefinedCoverageArea = 10760000;
+      } else if (
+        this.typeOfSiteCategory == "outdoor" &&
+        this.measurementUnitType == "imperial"
+      ) {
+        this.userDefinedCoverageArea = 5 * 0.386102;
+      } else if (
+        this.typeOfSiteCategory == "outdoor" &&
+        this.measurementUnitType == "metric"
+      ) {
         this.userDefinedCoverageArea = 5;
-      } else {
-        this.userDefinedCoverageArea =
-          this.userDefinedCoverageArea * this.mileToKilometer;
       }
     },
+    // measurementUnitType() {
+    //   if (this.measurementUnitType == "metric") {
+    //     this.userDefinedCoverageArea = 5;
+    //   } else {
+    //     this.userDefinedCoverageArea =
+    //       this.userDefinedCoverageArea * this.mileToKilometer;
+    //   }
+    // },
+    // typeOfSiteCategory() {
+    //   if (this.typeOfSiteCategory == "indoor") {
+    //     this.userDefinedCoverageArea = 1;
+    //   } else {
+    //     this.userDefinedCoverageArea = 5;
+    //   }
+    // },
+    // measurementUnitType() {
+    //   if (this.measurementUnitType == "metric") {
+    //     this.userDefinedCoverageArea = 5;
+    //   } else {
+    //     this.userDefinedCoverageArea =
+    //       this.userDefinedCoverageArea * this.mileToKilometer;
+    //   }
+    // },
     typeOfSiteCategory() {
-      if (this.typeOfSiteCategory == "indoor") {
-        this.userDefinedCoverageArea = 1;
-      } else {
+      if (
+        this.typeOfSiteCategory == "indoor" &&
+        this.measurementUnitType == "metric"
+      ) {
+        this.userDefinedCoverageArea = 1000000;
+      } else if (
+        this.typeOfSiteCategory == "indoor" &&
+        this.measurementUnitType == "imperial"
+      ) {
+        this.userDefinedCoverageArea = 10760000;
+      } else if (
+        this.typeOfSiteCategory == "outdoor" &&
+        this.measurementUnitType == "imperial"
+      ) {
+        this.userDefinedCoverageArea = 5 * 0.386102;
+      } else if (
+        this.typeOfSiteCategory == "outdoor" &&
+        this.measurementUnitType == "metric"
+      ) {
+        this.userDefinedCoverageArea = 5;
+      }
+    },
+    measurementUnitType() {
+      if (
+        this.typeOfSiteCategory == "indoor" &&
+        this.measurementUnitType == "metric"
+      ) {
+        this.userDefinedCoverageArea = 1000000;
+      } else if (
+        this.typeOfSiteCategory == "indoor" &&
+        this.measurementUnitType == "imperial"
+      ) {
+        this.userDefinedCoverageArea = 10760000;
+      } else if (
+        this.typeOfSiteCategory == "outdoor" &&
+        this.measurementUnitType == "imperial"
+      ) {
+        this.userDefinedCoverageArea = 5 * 0.386102;
+      } else if (
+        this.typeOfSiteCategory == "outdoor" &&
+        this.measurementUnitType == "metric"
+      ) {
         this.userDefinedCoverageArea = 5;
       }
     },
