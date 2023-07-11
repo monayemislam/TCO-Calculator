@@ -1267,6 +1267,7 @@
       </div>
       <div class="col col-xs-12">
         <h3>TCO Comparison</h3>
+        <TcoComparisonChart :chartData="chartData" />
       </div>
     </div>
 
@@ -1281,9 +1282,10 @@
 
 <script>
 // import BusinessCaseChart from "./BusinessCaseChart.vue";
+import TcoComparisonChart from "@/components/TcoComparisonChart.vue";
 export default {
   name: "NybSysCalculator",
-  // components: { BusinessCaseChart },
+  components: { TcoComparisonChart },
   data() {
     return {
       measurementUnitType: "metric",
@@ -1339,6 +1341,10 @@ export default {
       wifi6CoverageAre: 0.0081, //sq.km
       //cost
       estimatedCost: 500,
+      wifi6: 200,
+      privateWirelessMultifile: 50,
+      privateWirelessLTE: 89,
+      //chart data
     };
   },
   methods: {
@@ -1399,6 +1405,19 @@ export default {
       ) {
         this.userDefinedCoverageArea = 5;
       }
+
+      // if (
+      //   this.typeOfSiteCategory == "indoor" &&
+      //   this.measurementUnitType == "metric"
+      // ) {
+      //   const result =
+      //     (this.userDefinedCoverageArea / 1000000 / this.wifi6CoverageAre) *
+      //     this.wifi6;
+      //   this.privateWirelessMultifile = result;
+      // }
+      // else{
+      //   this.privateWirelessMultifile = 190;
+      // }
     },
     // measurementUnitType() {
     //   if (this.measurementUnitType == "metric") {
@@ -1429,21 +1448,30 @@ export default {
         this.measurementUnitType == "metric"
       ) {
         this.userDefinedCoverageArea = 1000000;
+        // const result =
+        //   (this.userDefinedCoverageArea / 1000000 / this.wifi6CoverageAre) *
+        //   this.wifi6;
+        this.privateWirelessMultifile = 90;
+        console.log(this.privateWirelessMultifile);
       } else if (
         this.typeOfSiteCategory == "indoor" &&
         this.measurementUnitType == "imperial"
       ) {
         this.userDefinedCoverageArea = 10760000;
+        this.privateWirelessMultifile = 400;
       } else if (
         this.typeOfSiteCategory == "outdoor" &&
         this.measurementUnitType == "imperial"
       ) {
         this.userDefinedCoverageArea = 5 * 0.386102;
+        this.privateWirelessMultifile = 800;
       } else if (
         this.typeOfSiteCategory == "outdoor" &&
         this.measurementUnitType == "metric"
       ) {
         this.userDefinedCoverageArea = 5;
+        this.privateWirelessMultifile = 200;
+        console.log(this.privateWirelessMultifile);
       }
     },
     measurementUnitType() {
@@ -1599,6 +1627,41 @@ export default {
     theRequiredNumberOf5GBaseStation() {
       const result = this.userDefinedCoverageArea / this.coverageArea;
       return Math.ceil(result);
+    },
+    // getPrivateWirelessMultifileValue() {
+    //   if (
+    //     this.typeOfSiteCategory == "indoor" &&
+    //     this.measurementUnitType == "metric"
+    //   ) {
+    //     const result =
+    //       (this.userDefinedCoverageArea / 1000000 / this.wifi6CoverageAre) *
+    //       this.wifi6;
+    //     return result;
+    //   } else if (
+    //     this.typeOfSiteCategory == "indoor" &&
+    //     this.measurementUnitType == "imperial"
+    //   ) {
+    //     const result =
+    //       (this.userDefinedCoverageArea / 10760000 / this.wifi6CoverageAre) *
+    //       this.wifi6;
+    //     return result;
+    //   } else {
+    //     return 50;
+    //   }
+    // },
+    chartData() {
+      return {
+        labels: [
+          "wifi-6",
+          "private wireless multifile",
+          "private wireless LTE/4.9G",
+        ],
+        values: [
+          this.wifi6,
+          this.privateWirelessMultifile,
+          this.privateWirelessLTE,
+        ],
+      };
     },
   },
 };
