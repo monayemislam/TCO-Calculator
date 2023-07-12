@@ -1156,7 +1156,150 @@
       <div class="col col-xs-12"><BusinessCaseChart></BusinessCaseChart></div>
     </div> -->
 
-    <div class="row mt-4 py-3 me-2">
+    <!-- <div class="row mt-4 py-3 me-2">
+      <div class="col col-xs-12 cell-comparison py-4 border">
+        <h3 class="pb-3">Cell Comparison</h3>
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <td>Cell Count</td>
+              <td>Indoor</td>
+              <td>Outdoor</td>
+            </tr>
+            <tr>
+              <td style="background-color: #6dbdbf; color: #ffffff">Wi-Fi 6</td>
+              <td>
+                <span
+                  v-if="
+                    typeOfSiteCategory == 'indoor' &&
+                    measurementUnitType == 'metric'
+                  "
+                  >{{
+                    (
+                      userDefinedCoverageArea /
+                      1000000 /
+                      wifi6CoverageAre
+                    ).toFixed(0)
+                  }}</span
+                >
+                <span
+                  v-if="
+                    typeOfSiteCategory == 'indoor' &&
+                    measurementUnitType == 'imperial'
+                  "
+                  >{{
+                    (
+                      userDefinedCoverageArea /
+                      10760000 /
+                      wifi6CoverageAre
+                    ).toFixed(0)
+                  }}</span
+                >
+                <span v-if="typeOfSiteCategory == 'outdoor'">-</span>
+              </td>
+              <td>
+                <span
+                  v-if="
+                    typeOfSiteCategory == 'outdoor' &&
+                    measurementUnitType == 'metric'
+                  "
+                  >{{
+                    (
+                      (0.5 * userDefinedCoverageArea) /
+                      wifi6CoverageAre
+                    ).toFixed(0)
+                  }}</span
+                >
+                <span
+                  v-if="
+                    typeOfSiteCategory == 'outdoor' &&
+                    measurementUnitType == 'imperial'
+                  "
+                  >{{
+                    (
+                      (0.5 * userDefinedCoverageArea) /
+                      0.386102 /
+                      wifi6CoverageAre
+                    ).toFixed(0)
+                  }}</span
+                >
+                <span v-if="typeOfSiteCategory == 'indoor'">-</span>
+              </td>
+            </tr>
+            <tr>
+              <td style="background-color: #57a0e5; color: #ffffff">
+                Private wireless CBRS
+              </td>
+              <td>
+                <span
+                  v-if="
+                    typeOfSiteCategory == 'indoor' &&
+                    measurementUnitType == 'metric'
+                  "
+                  >{{ Math.ceil(numberOfRadio / 1000000) }}</span
+                >
+                <span
+                  v-if="
+                    typeOfSiteCategory == 'indoor' &&
+                    measurementUnitType == 'imperial'
+                  "
+                  >{{ Math.ceil(numberOfRadio / 10760000) }}</span
+                >
+                <span v-if="typeOfSiteCategory == 'outdoor'">-</span>
+              </td>
+              <td>
+                <span
+                  v-if="
+                    typeOfSiteCategory == 'outdoor' &&
+                    measurementUnitType == 'imperial'
+                  "
+                  >{{ Math.ceil(numberOfRadio / 0.386102) }}</span
+                >
+                <span
+                  v-if="
+                    typeOfSiteCategory == 'outdoor' &&
+                    measurementUnitType == 'metric'
+                  "
+                  >{{ Math.ceil(numberOfRadio) }}</span
+                >
+                <span v-if="typeOfSiteCategory == 'indoor'">-</span>
+              </td>
+            </tr>
+            <tr>
+              <td style="background-color: #ed6d85; color: #ffffff">
+                Private wireless LTE
+              </td>
+              <td></td>
+              <td>
+                <span v-if="typeOfSiteCategory == 'outdoor'">
+                  <span
+                    v-if="
+                      userDefinedCoverageArea >= 7 &&
+                      userDefinedCoverageArea <= 12
+                    "
+                    >2</span
+                  >
+                  <span v-if="userDefinedCoverageArea < 7">1</span>
+                </span>
+                <span v-if="typeOfSiteCategory == 'indoor'">-</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div
+        class="col col-xs-12 py-3 ms-4 border"
+        style="background-color: #edf2f5"
+      >
+        <div class="py-4">
+          <h4>TCO Comparison</h4>
+          <h6>(For 3 Years)</h6>
+          <TcoComparisonChart :chartData="chartData" />
+        </div>
+      </div>
+    </div> -->
+
+    <div class="row g-4 mx-1 my-4">
       <div class="col col-xs-12 cell-comparison py-4 border">
         <h3 class="pb-3">Cell Comparison</h3>
         <table class="table table-bordered">
@@ -1299,14 +1442,19 @@
       </div>
     </div>
 
-    <!-- <div class="row mt-4 py-3 me-2">
-      <div class="col col-xs-12 cell-comparison py-4 border"> -->
-
-    <div class="row mt-4 py-3 border mx-1">
-      <img src="../assets/business-case-overview.png" width="1070px" />
-    </div>
-    <div class="row mt-4 py-3 border mx-1">
-      <img src="../assets/tco-comaprison2.png" width="1070px" />
+    <div class="row g-4 pb-4">
+      <div class="col-6">
+        <div class="p-3 border bg-light">
+          <h4 class="pb-3">Business case overview</h4>
+          <img src="../assets/value-build-up.jpg" width="100%" />
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="p-3 border bg-light">
+          <h4 class="pb-3">Value build-up</h4>
+          <img src="../assets/value-build-up.jpg" width="100%" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
