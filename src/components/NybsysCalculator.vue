@@ -779,11 +779,11 @@
                   id="flexSwitchCheckDefault"
                 /> -->
               </div>
-              <div class="col-6 text-end">
+              <!-- <div class="col-6 text-end">
                 <button class="btn btn-primary btn-sm download-btn">
                   Download
                 </button>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -1156,7 +1156,7 @@
       <div class="col col-xs-12"><BusinessCaseChart></BusinessCaseChart></div>
     </div> -->
 
-    <div class="row mt-4 py-3 mx-1">
+    <div class="row mt-4 py-3 me-2">
       <div class="col col-xs-12 cell-comparison py-4 border">
         <h3 class="pb-3">Cell Comparison</h3>
         <table class="table table-bordered">
@@ -1231,15 +1231,37 @@
                 Private wireless CBRS
               </td>
               <td>
-                <span v-if="typeOfSiteCategory == 'indoor'">{{
-                  Math.ceil(numberOfRadio / 1000000)
-                }}</span>
+                <span
+                  v-if="
+                    typeOfSiteCategory == 'indoor' &&
+                    measurementUnitType == 'metric'
+                  "
+                  >{{ Math.ceil(numberOfRadio / 1000000) }}</span
+                >
+                <span
+                  v-if="
+                    typeOfSiteCategory == 'indoor' &&
+                    measurementUnitType == 'imperial'
+                  "
+                  >{{ Math.ceil(numberOfRadio / 10760000) }}</span
+                >
                 <span v-if="typeOfSiteCategory == 'outdoor'">-</span>
               </td>
               <td>
-                <span v-if="typeOfSiteCategory == 'outdoor'">{{
-                  Math.ceil(numberOfRadio / 0.386102)
-                }}</span>
+                <span
+                  v-if="
+                    typeOfSiteCategory == 'outdoor' &&
+                    measurementUnitType == 'imperial'
+                  "
+                  >{{ Math.ceil(numberOfRadio / 0.386102) }}</span
+                >
+                <span
+                  v-if="
+                    typeOfSiteCategory == 'outdoor' &&
+                    measurementUnitType == 'metric'
+                  "
+                  >{{ Math.ceil(numberOfRadio) }}</span
+                >
                 <span v-if="typeOfSiteCategory == 'indoor'">-</span>
               </td>
             </tr>
@@ -1265,11 +1287,20 @@
           </tbody>
         </table>
       </div>
-      <div class="col col-xs-12">
-        <h3>TCO Comparison</h3>
-        <TcoComparisonChart :chartData="chartData" />
+      <div
+        class="col col-xs-12 py-3 ms-4 border"
+        style="background-color: #edf2f5"
+      >
+        <div class="py-4">
+          <h4>TCO Comparison</h4>
+          <h6>(For 3 Years)</h6>
+          <TcoComparisonChart :chartData="chartData" />
+        </div>
       </div>
     </div>
+
+    <!-- <div class="row mt-4 py-3 me-2">
+      <div class="col col-xs-12 cell-comparison py-4 border"> -->
 
     <div class="row mt-4 py-3 border mx-1">
       <img src="../assets/business-case-overview.png" width="1070px" />
@@ -1341,9 +1372,12 @@ export default {
       wifi6CoverageAre: 0.0081, //sq.km
       //cost
       estimatedCost: 500,
-      wifi6: 200,
-      privateWirelessMultifile: 50,
-      privateWirelessLTE: 89,
+      lteUnitCostInyear: 36000, //per year
+      wifi6: 0,
+      wifi6UnitPrice: 200,
+      tcoPeriodInYear: 3, //years
+      privateWirelessMultifile: 0,
+      privateWirelessLTE: 0,
       //chart data
     };
   },
@@ -1448,11 +1482,102 @@ export default {
         this.measurementUnitType == "metric"
       ) {
         this.userDefinedCoverageArea = 1000000;
-        // const result =
-        //   (this.userDefinedCoverageArea / 1000000 / this.wifi6CoverageAre) *
-        //   this.wifi6;
+        const result =
+          (this.userDefinedCoverageArea / 1000000 / this.wifi6CoverageAre) *
+          this.wifi6UnitPrice *
+          this.tcoPeriodInYear;
+        this.wifi6 = result.toFixed(0);
+        //privateWirelessMultifile
+        this.privateWirelessMultifile = (
+          Math.ceil(this.numberOfRadio / 1000000) *
+          this.estimatedCost *
+          12 *
+          this.tcoPeriodInYear
+        ).toFixed(0);
+      } else if (
+        this.typeOfSiteCategory == "indoor" &&
+        this.measurementUnitType == "imperial"
+      ) {
+        this.userDefinedCoverageArea = 10760000;
+        const result =
+          (this.userDefinedCoverageArea / 10760000 / this.wifi6CoverageAre) *
+          this.wifi6UnitPrice *
+          this.tcoPeriodInYear;
+        this.wifi6 = result.toFixed(0);
+        //privateWirelessMultifile
+        this.privateWirelessMultifile = (
+          Math.ceil(this.numberOfRadio / 10760000) *
+          this.estimatedCost *
+          12 *
+          this.tcoPeriodInYear
+        ).toFixed(0);
+      } else if (
+        this.typeOfSiteCategory == "outdoor" &&
+        this.measurementUnitType == "imperial"
+      ) {
+        this.userDefinedCoverageArea = 5 * 0.386102;
+        const result =
+          ((0.5 * this.userDefinedCoverageArea) /
+            0.386102 /
+            this.wifi6CoverageAre) *
+          this.wifi6UnitPrice *
+          this.tcoPeriodInYear;
+        this.wifi6 = result.toFixed(0);
+        //privateWirelessMultifile
+        this.privateWirelessMultifile = (
+          Math.ceil(this.numberOfRadio / 0.386102) *
+          this.estimatedCost *
+          12 *
+          this.tcoPeriodInYear
+        ).toFixed(0);
+        //PrivateWirelessLTE
+        if (
+          this.userDefinedCoverageArea >= 7 &&
+          this.userDefinedCoverageArea <= 12
+        ) {
+          this.privateWirelessLTE =
+            2 * this.lteUnitCostInyear * this.tcoPeriodInYear;
+        } else if (this.userDefinedCoverageArea < 7) {
+          this.privateWirelessLTE =
+            1 * this.lteUnitCostInyear * this.tcoPeriodInYear;
+        }
+      } else if (
+        this.typeOfSiteCategory == "outdoor" &&
+        this.measurementUnitType == "metric"
+      ) {
+        this.userDefinedCoverageArea = 5;
+        const result =
+          ((0.5 * this.userDefinedCoverageArea) / this.wifi6CoverageAre) *
+          this.wifi6UnitPrice *
+          this.tcoPeriodInYear;
+        this.wifi6 = result.toFixed(0);
+        //privateWirelessMultifile
+        this.privateWirelessMultifile = (
+          Math.ceil(this.numberOfRadio) *
+          this.estimatedCost *
+          12 *
+          this.tcoPeriodInYear
+        ).toFixed(0);
+        //PrivateWirelessLTE
+        if (
+          this.userDefinedCoverageArea >= 7 &&
+          this.userDefinedCoverageArea <= 12
+        ) {
+          this.privateWirelessLTE =
+            2 * this.lteUnitCostInyear * this.tcoPeriodInYear;
+        } else if (this.userDefinedCoverageArea < 7) {
+          this.privateWirelessLTE =
+            1 * this.lteUnitCostInyear * this.tcoPeriodInYear;
+        }
+      }
+    },
+    measurementUnitType() {
+      if (
+        this.typeOfSiteCategory == "indoor" &&
+        this.measurementUnitType == "metric"
+      ) {
+        this.userDefinedCoverageArea = 1000000;
         this.privateWirelessMultifile = 90;
-        console.log(this.privateWirelessMultifile);
       } else if (
         this.typeOfSiteCategory == "indoor" &&
         this.measurementUnitType == "imperial"
@@ -1471,30 +1596,6 @@ export default {
       ) {
         this.userDefinedCoverageArea = 5;
         this.privateWirelessMultifile = 200;
-        console.log(this.privateWirelessMultifile);
-      }
-    },
-    measurementUnitType() {
-      if (
-        this.typeOfSiteCategory == "indoor" &&
-        this.measurementUnitType == "metric"
-      ) {
-        this.userDefinedCoverageArea = 1000000;
-      } else if (
-        this.typeOfSiteCategory == "indoor" &&
-        this.measurementUnitType == "imperial"
-      ) {
-        this.userDefinedCoverageArea = 10760000;
-      } else if (
-        this.typeOfSiteCategory == "outdoor" &&
-        this.measurementUnitType == "imperial"
-      ) {
-        this.userDefinedCoverageArea = 5 * 0.386102;
-      } else if (
-        this.typeOfSiteCategory == "outdoor" &&
-        this.measurementUnitType == "metric"
-      ) {
-        this.userDefinedCoverageArea = 5;
       }
     },
   },
@@ -1653,7 +1754,7 @@ export default {
       return {
         labels: [
           "wifi-6",
-          "private wireless multifile",
+          "Private wireless CBRS",
           "private wireless LTE/4.9G",
         ],
         values: [
@@ -1728,3 +1829,7 @@ export default {
   background-color: #edf2f5;
 }
 </style>
+
+
+
+
