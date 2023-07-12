@@ -1446,7 +1446,7 @@
       <div class="col-6">
         <div class="p-3 border bg-light">
           <h4 class="pb-3">Business case overview</h4>
-          <img src="../assets/value-build-up.jpg" width="100%" />
+          <img src="../assets/business-case-overview.jpg" width="100%" />
         </div>
       </div>
       <div class="col-6">
@@ -1719,31 +1719,122 @@ export default {
         }
       }
     },
+    // measurementUnitType() {
+    //   if (
+    //     this.typeOfSiteCategory == "indoor" &&
+    //     this.measurementUnitType == "metric"
+    //   ) {
+    //     this.userDefinedCoverageArea = 1000000;
+    //   } else if (
+    //     this.typeOfSiteCategory == "indoor" &&
+    //     this.measurementUnitType == "imperial"
+    //   ) {
+    //     this.userDefinedCoverageArea = 10760000;
+    //   } else if (
+    //     this.typeOfSiteCategory == "outdoor" &&
+    //     this.measurementUnitType == "imperial"
+    //   ) {
+    //     this.userDefinedCoverageArea = 5 * 0.386102;
+    //   } else if (
+    //     this.typeOfSiteCategory == "outdoor" &&
+    //     this.measurementUnitType == "metric"
+    //   ) {
+    //     this.userDefinedCoverageArea = 5;
+    //   }
+    // },
     measurementUnitType() {
       if (
         this.typeOfSiteCategory == "indoor" &&
         this.measurementUnitType == "metric"
       ) {
         this.userDefinedCoverageArea = 1000000;
-        this.privateWirelessMultifile = 90;
+        const result =
+          (this.userDefinedCoverageArea / 1000000 / this.wifi6CoverageAre) *
+          this.wifi6UnitPrice *
+          this.tcoPeriodInYear;
+        this.wifi6 = result.toFixed(0);
+        //privateWirelessMultifile
+        this.privateWirelessMultifile = (
+          Math.ceil(this.numberOfRadio / 1000000) *
+          this.estimatedCost *
+          12 *
+          this.tcoPeriodInYear
+        ).toFixed(0);
       } else if (
         this.typeOfSiteCategory == "indoor" &&
         this.measurementUnitType == "imperial"
       ) {
         this.userDefinedCoverageArea = 10760000;
-        this.privateWirelessMultifile = 400;
+        const result =
+          (this.userDefinedCoverageArea / 10760000 / this.wifi6CoverageAre) *
+          this.wifi6UnitPrice *
+          this.tcoPeriodInYear;
+        this.wifi6 = result.toFixed(0);
+        //privateWirelessMultifile
+        this.privateWirelessMultifile = (
+          Math.ceil(this.numberOfRadio / 10760000) *
+          this.estimatedCost *
+          12 *
+          this.tcoPeriodInYear
+        ).toFixed(0);
       } else if (
         this.typeOfSiteCategory == "outdoor" &&
         this.measurementUnitType == "imperial"
       ) {
         this.userDefinedCoverageArea = 5 * 0.386102;
-        this.privateWirelessMultifile = 800;
+        const result =
+          ((0.5 * this.userDefinedCoverageArea) /
+            0.386102 /
+            this.wifi6CoverageAre) *
+          this.wifi6UnitPrice *
+          this.tcoPeriodInYear;
+        this.wifi6 = result.toFixed(0);
+        //privateWirelessMultifile
+        this.privateWirelessMultifile = (
+          Math.ceil(this.numberOfRadio / 0.386102) *
+          this.estimatedCost *
+          12 *
+          this.tcoPeriodInYear
+        ).toFixed(0);
+        //PrivateWirelessLTE
+        if (
+          this.userDefinedCoverageArea >= 7 &&
+          this.userDefinedCoverageArea <= 12
+        ) {
+          this.privateWirelessLTE =
+            2 * this.lteUnitCostInyear * this.tcoPeriodInYear;
+        } else if (this.userDefinedCoverageArea < 7) {
+          this.privateWirelessLTE =
+            1 * this.lteUnitCostInyear * this.tcoPeriodInYear;
+        }
       } else if (
         this.typeOfSiteCategory == "outdoor" &&
         this.measurementUnitType == "metric"
       ) {
         this.userDefinedCoverageArea = 5;
-        this.privateWirelessMultifile = 200;
+        const result =
+          ((0.5 * this.userDefinedCoverageArea) / this.wifi6CoverageAre) *
+          this.wifi6UnitPrice *
+          this.tcoPeriodInYear;
+        this.wifi6 = result.toFixed(0);
+        //privateWirelessMultifile
+        this.privateWirelessMultifile = (
+          Math.ceil(this.numberOfRadio) *
+          this.estimatedCost *
+          12 *
+          this.tcoPeriodInYear
+        ).toFixed(0);
+        //PrivateWirelessLTE
+        if (
+          this.userDefinedCoverageArea >= 7 &&
+          this.userDefinedCoverageArea <= 12
+        ) {
+          this.privateWirelessLTE =
+            2 * this.lteUnitCostInyear * this.tcoPeriodInYear;
+        } else if (this.userDefinedCoverageArea < 7) {
+          this.privateWirelessLTE =
+            1 * this.lteUnitCostInyear * this.tcoPeriodInYear;
+        }
       }
     },
   },
