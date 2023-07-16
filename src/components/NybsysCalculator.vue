@@ -242,10 +242,14 @@
                   <input
                     type="number"
                     class="form-control form-control-sm"
+                    :class="{ 'is-invalid': isInvalidCenterFrequency }"
                     v-model="carrierFrequency"
-                    min="3550"
-                    max="3700"
+                    :min="minCarrierFrequency"
+                    :max="maxCarrierFrequency"
                   />
+                  <div v-if="isInvalidCenterFrequency" class="invalid-feedback">
+                    Invalid Carrier frequency.
+                  </div>
                 </div>
               </div>
             </div>
@@ -309,13 +313,26 @@
                     >Baseband Unit Antenna Gain(dBi) *</label
                   >
                 </div>
-                <div class="col-4">
+                <!-- <div class="col-4">
                   <input
                     type="number"
                     class="form-control form-control-sm"
                     min="1"
                     v-model="antennaGain"
                   />
+                </div> -->
+                <div class="col-4">
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    :class="{ 'is-invalid': isInvalidAntennaGain }"
+                    :min="minAntennaGain"
+                    :max="maxAntennaGain"
+                    v-model="antennaGain"
+                  />
+                  <div v-if="isInvalidAntennaGain" class="invalid-feedback">
+                    Invalid antenna gain value.
+                  </div>
                 </div>
               </div>
             </div>
@@ -1148,157 +1165,6 @@
       </div>
     </div>
 
-    <!-- <div class="row mt-4 py-3 border mx-1">
-      <div class="col col-xs-12">
-        <div>Factory active use cases</div>
-        <BusinessCaseChart></BusinessCaseChart>
-      </div>
-      <div class="col col-xs-12"><BusinessCaseChart></BusinessCaseChart></div>
-    </div> -->
-
-    <!-- <div class="row mt-4 py-3 me-2">
-      <div class="col col-xs-12 cell-comparison py-4 border">
-        <h3 class="pb-3">Cell Comparison</h3>
-        <table class="table table-bordered">
-          <tbody>
-            <tr>
-              <td>Cell Count</td>
-              <td>Indoor</td>
-              <td>Outdoor</td>
-            </tr>
-            <tr>
-              <td style="background-color: #6dbdbf; color: #ffffff">Wi-Fi 6</td>
-              <td>
-                <span
-                  v-if="
-                    typeOfSiteCategory == 'indoor' &&
-                    measurementUnitType == 'metric'
-                  "
-                  >{{
-                    (
-                      userDefinedCoverageArea /
-                      1000000 /
-                      wifi6CoverageAre
-                    ).toFixed(0)
-                  }}</span
-                >
-                <span
-                  v-if="
-                    typeOfSiteCategory == 'indoor' &&
-                    measurementUnitType == 'imperial'
-                  "
-                  >{{
-                    (
-                      userDefinedCoverageArea /
-                      10760000 /
-                      wifi6CoverageAre
-                    ).toFixed(0)
-                  }}</span
-                >
-                <span v-if="typeOfSiteCategory == 'outdoor'">-</span>
-              </td>
-              <td>
-                <span
-                  v-if="
-                    typeOfSiteCategory == 'outdoor' &&
-                    measurementUnitType == 'metric'
-                  "
-                  >{{
-                    (
-                      (0.5 * userDefinedCoverageArea) /
-                      wifi6CoverageAre
-                    ).toFixed(0)
-                  }}</span
-                >
-                <span
-                  v-if="
-                    typeOfSiteCategory == 'outdoor' &&
-                    measurementUnitType == 'imperial'
-                  "
-                  >{{
-                    (
-                      (0.5 * userDefinedCoverageArea) /
-                      0.386102 /
-                      wifi6CoverageAre
-                    ).toFixed(0)
-                  }}</span
-                >
-                <span v-if="typeOfSiteCategory == 'indoor'">-</span>
-              </td>
-            </tr>
-            <tr>
-              <td style="background-color: #57a0e5; color: #ffffff">
-                Private wireless CBRS
-              </td>
-              <td>
-                <span
-                  v-if="
-                    typeOfSiteCategory == 'indoor' &&
-                    measurementUnitType == 'metric'
-                  "
-                  >{{ Math.ceil(numberOfRadio / 1000000) }}</span
-                >
-                <span
-                  v-if="
-                    typeOfSiteCategory == 'indoor' &&
-                    measurementUnitType == 'imperial'
-                  "
-                  >{{ Math.ceil(numberOfRadio / 10760000) }}</span
-                >
-                <span v-if="typeOfSiteCategory == 'outdoor'">-</span>
-              </td>
-              <td>
-                <span
-                  v-if="
-                    typeOfSiteCategory == 'outdoor' &&
-                    measurementUnitType == 'imperial'
-                  "
-                  >{{ Math.ceil(numberOfRadio / 0.386102) }}</span
-                >
-                <span
-                  v-if="
-                    typeOfSiteCategory == 'outdoor' &&
-                    measurementUnitType == 'metric'
-                  "
-                  >{{ Math.ceil(numberOfRadio) }}</span
-                >
-                <span v-if="typeOfSiteCategory == 'indoor'">-</span>
-              </td>
-            </tr>
-            <tr>
-              <td style="background-color: #ed6d85; color: #ffffff">
-                Private wireless LTE
-              </td>
-              <td></td>
-              <td>
-                <span v-if="typeOfSiteCategory == 'outdoor'">
-                  <span
-                    v-if="
-                      userDefinedCoverageArea >= 7 &&
-                      userDefinedCoverageArea <= 12
-                    "
-                    >2</span
-                  >
-                  <span v-if="userDefinedCoverageArea < 7">1</span>
-                </span>
-                <span v-if="typeOfSiteCategory == 'indoor'">-</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div
-        class="col col-xs-12 py-3 ms-4 border"
-        style="background-color: #edf2f5"
-      >
-        <div class="py-4">
-          <h4>TCO Comparison</h4>
-          <h6>(For 3 Years)</h6>
-          <TcoComparisonChart :chartData="chartData" />
-        </div>
-      </div>
-    </div> -->
-
     <div class="row g-4 mx-1 my-4">
       <div class="col col-xs-12 cell-comparison py-4 border">
         <h3 class="pb-3">Cell Comparison</h3>
@@ -1497,8 +1363,12 @@ export default {
       transmitPower: 30,
       bandwidth: 10,
       antennaGain: 18,
+      maxAntennaGain: 25,
+      minAntennaGain: 1,
       antennaType: 1,
       carrierFrequency: 3600,
+      minCarrierFrequency: 3550,
+      maxCarrierFrequency: 3700,
       baseStationAntennaHeight: 20,
       userTerminalHeight: 2,
       shannonCapacityScalingFactorAlpha: null,
@@ -1570,12 +1440,12 @@ export default {
         this.typeOfSiteCategory == "indoor" &&
         this.measurementUnitType == "metric"
       ) {
-        this.userDefinedCoverageArea = 1000000;
+        this.userDefinedCoverageArea = 5000;
       } else if (
         this.typeOfSiteCategory == "indoor" &&
         this.measurementUnitType == "imperial"
       ) {
-        this.userDefinedCoverageArea = 10760000;
+        this.userDefinedCoverageArea = 10000;
       } else if (
         this.typeOfSiteCategory == "outdoor" &&
         this.measurementUnitType == "imperial"
@@ -1601,35 +1471,12 @@ export default {
       //   this.privateWirelessMultifile = 190;
       // }
     },
-    // measurementUnitType() {
-    //   if (this.measurementUnitType == "metric") {
-    //     this.userDefinedCoverageArea = 5;
-    //   } else {
-    //     this.userDefinedCoverageArea =
-    //       this.userDefinedCoverageArea * this.mileToKilometer;
-    //   }
-    // },
-    // typeOfSiteCategory() {
-    //   if (this.typeOfSiteCategory == "indoor") {
-    //     this.userDefinedCoverageArea = 1;
-    //   } else {
-    //     this.userDefinedCoverageArea = 5;
-    //   }
-    // },
-    // measurementUnitType() {
-    //   if (this.measurementUnitType == "metric") {
-    //     this.userDefinedCoverageArea = 5;
-    //   } else {
-    //     this.userDefinedCoverageArea =
-    //       this.userDefinedCoverageArea * this.mileToKilometer;
-    //   }
-    // },
     typeOfSiteCategory() {
       if (
         this.typeOfSiteCategory == "indoor" &&
         this.measurementUnitType == "metric"
       ) {
-        this.userDefinedCoverageArea = 1000000;
+        this.userDefinedCoverageArea = 5000;
         const result =
           (this.userDefinedCoverageArea / 1000000 / this.wifi6CoverageAre) *
           this.wifi6UnitPrice *
@@ -1646,7 +1493,7 @@ export default {
         this.typeOfSiteCategory == "indoor" &&
         this.measurementUnitType == "imperial"
       ) {
-        this.userDefinedCoverageArea = 10760000;
+        this.userDefinedCoverageArea = 10000;
         const result =
           (this.userDefinedCoverageArea / 10760000 / this.wifi6CoverageAre) *
           this.wifi6UnitPrice *
@@ -1968,27 +1815,6 @@ export default {
       const result = this.userDefinedCoverageArea / this.coverageArea;
       return Math.ceil(result);
     },
-    // getPrivateWirelessMultifileValue() {
-    //   if (
-    //     this.typeOfSiteCategory == "indoor" &&
-    //     this.measurementUnitType == "metric"
-    //   ) {
-    //     const result =
-    //       (this.userDefinedCoverageArea / 1000000 / this.wifi6CoverageAre) *
-    //       this.wifi6;
-    //     return result;
-    //   } else if (
-    //     this.typeOfSiteCategory == "indoor" &&
-    //     this.measurementUnitType == "imperial"
-    //   ) {
-    //     const result =
-    //       (this.userDefinedCoverageArea / 10760000 / this.wifi6CoverageAre) *
-    //       this.wifi6;
-    //     return result;
-    //   } else {
-    //     return 50;
-    //   }
-    // },
     chartData() {
       return {
         labels: [
@@ -2002,6 +1828,18 @@ export default {
           this.privateWirelessLTE,
         ],
       };
+    },
+    isInvalidAntennaGain() {
+      return (
+        this.antennaGain < this.minAntennaGain ||
+        this.antennaGain > this.maxAntennaGain
+      );
+    },
+    isInvalidCenterFrequency() {
+      return (
+        this.carrierFrequency < this.minCarrierFrequency ||
+        this.carrierFrequency > this.maxCarrierFrequency
+      );
     },
   },
 };
@@ -2066,6 +1904,16 @@ export default {
 /*cell comparison*/
 .cell-comparison {
   background-color: #edf2f5;
+}
+/* validity check */
+.is-invalid {
+  border-color: red;
+}
+
+.invalid-feedback {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
 }
 </style>
 
