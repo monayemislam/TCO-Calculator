@@ -545,14 +545,14 @@
                           measurementUnitType == 'metric' &&
                           typeOfSiteCategory == 'indoor'
                         "
-                        >{{ (coverageArea * 1000000).toFixed(0) }} sq. m</span
+                        >{{ (coverageArea * 1000000).toFixed(2) }} sq. m</span
                       >
                       <span
                         v-if="
                           measurementUnitType == 'imperial' &&
                           typeOfSiteCategory == 'indoor'
                         "
-                        >{{ (coverageArea * 10760000).toFixed(0) }} sq. ft</span
+                        >{{ (coverageArea * 10760000).toFixed(2) }} sq. ft</span
                       >
                       <span
                         v-if="
@@ -566,7 +566,7 @@
                           measurementUnitType == 'metric' &&
                           typeOfSiteCategory == 'outdoor'
                         "
-                        >{{ (coverageArea * 1).toFixed(0) }} sq. Km</span
+                        >{{ (coverageArea * 1).toFixed(2) }} sq. Km</span
                       ></b
                     ></span
                   >
@@ -645,7 +645,7 @@
             <div class="row pt-3">
               <div class="d-flex justify-content-between">
                 <div class="col">
-                  <label class="form-label">SNR</label>
+                  <label class="formThroughput-label">SNR</label>
                 </div>
                 <div class="col-6 text-end">
                   <span
@@ -716,7 +716,7 @@
                         fiveGNRDL !== '' &&
                         isFinite(fiveGNRDL)
                       "
-                      >{{ fiveGNRDL * 4 }} Mbps</b
+                      >{{ fiveGNRDL }} Mbps</b
                     ></span
                   >
                 </div>
@@ -1369,8 +1369,10 @@ export default {
       carrierFrequency: 3600,
       minCarrierFrequency: 3550,
       maxCarrierFrequency: 3700,
-      baseStationAntennaHeight: 20,
-      userTerminalHeight: 2,
+      baseStationAntennaHeight: 100,
+      // baseStationAntennaHeight: 20,
+      // userTerminalHeight: 2,
+      userTerminalHeight: 10,
       shannonCapacityScalingFactorAlpha: null,
       cableLoss: 2,
       noiseFigureUrban: 8,
@@ -1380,7 +1382,7 @@ export default {
       bodyLoss: 3,
       GUT: 0,
       RxAntennaGain: 0,
-      modulationScheme: 64,
+      modulationScheme: 256, // CHANGED HERE
       subCarrierSpacing: 30,
       slotsPerSubframe: 2,
       useCaseImageSource: null,
@@ -1802,9 +1804,9 @@ export default {
         4 *
         this.resourceBlocks *
         this.numberOfBitsPerSymbol *
-        (948 / 1024) *
+        (948 / 1000) *
         12;
-      return result.toFixed(2);
+      return result.toFixed(2); //check this equation
     },
     coverageArea() {
       const pi = Math.PI;
